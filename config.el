@@ -73,6 +73,11 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(defun my-add-to-multiple-hooks (function hooks)
+  (mapc (lambda (hook)
+          (add-hook hook function))
+        hooks))
+
 ;;font
 (add-to-list 'default-frame-alist '(height . 35))
 (add-to-list 'default-frame-alist '(width . 102))
@@ -176,8 +181,6 @@
 
 (setq parrot-rotate-dict
       '(
-        (:rot ("alpha" "beta") :caps t :lower nil)
-        (:rot ("snek" "snake" "stawp"))
         (:rot ("yes" "no") :caps t :upcase t)
         (:rot ("&" "|"))
         (:rot ("begin" "end") :caps t :upcase t)
@@ -191,21 +194,49 @@
         (:rot ("left" "right") :caps t :upcase t)
         (:rot ("min" "max") :caps t :upcase t)
         (:rot ("on" "off") :caps t :upcase t)
-        (:rot ("prev" "next"))
         (:rot ("start" "stop") :caps t :upcase t)
         (:rot ("true" "false") :caps t :upcase t)
         (:rot ("&&" "||"))
         (:rot ("==" "!="))
-        (:rot ("." "->"))
         (:rot ("if" "else" "elif"))
         (:rot ("ifdef" "ifndef"))
-        (:rot ("int8_t" "int16_t" "int32_t" "int64_t"))
-        (:rot ("uint8_t" "uint16_t" "uint32_t" "uint64_t"))
-        (:rot ("1" "2" "3" "4" "5" "6" "7" "8" "9" "10"))
-        (:rot ("1st" "2nd" "3rd" "4th" "5th" "6th" "7th" "8th" "9th" "10th"))
         ))
 
-(setq parrot-num-rotations nil)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+          (setq parrot-num-rotations 10)
+          (parrot-mode)
+          (parrot-set-parrot-type 'emacs)))
+
+(defun my-parrot-thumbsup-play ()
+  (parrot-set-parrot-type 'thumbsup)
+  (parrot-start-animation))
+
+(defun my-parrot-emacs-play ()
+  (parrot-set-parrot-type 'emacs)
+  (parrot-start-animation))
+
+(defun my-parrot-rotating-play ()
+  (parrot-set-parrot-type 'rotating)
+  (parrot-start-animation))
+
+(my-add-to-multiple-hooks
+ 'my-parrot-thumbsup-play
+ '(org-after-todo-state-change-hook
+   org-clock-in-hook
+   org-timer-done-hook
+   magit-post-commit-hook))
+
+(my-add-to-multiple-hooks
+ 'my-parrot-emacs-play
+ '(after-save-hook
+   find-file-hook))
+
+(my-add-to-multiple-hooks
+ 'my-parrot-rotating-play
+ '(elfeed-search-mode-hook
+   mu4e-main-mode-hook))
+
 ;;; org
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
