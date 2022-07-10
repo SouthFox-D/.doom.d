@@ -225,7 +225,7 @@
  '(org-after-todo-state-change-hook
    org-clock-in-hook
    org-timer-done-hook
-   magit-post-commit-hook))
+   git-commit-post-finish-hook))
 
 (my-add-to-multiple-hooks
  'my-parrot-emacs-play
