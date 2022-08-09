@@ -49,6 +49,8 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 (package! rime)
+(package! cnfonts)
+(package! tldr)
 
 (package! org-download)
 (package! org-transclusion)

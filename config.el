@@ -67,7 +67,10 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-gruvbox)
+(setq doom-theme 'doom-dracula)
+(cnfonts-mode 1)
+(setq word-wrap-by-category t)
+
 (load! "secrets")
 (setq-default custom-file (expand-file-name "secrets.el" doom-private-dir))
 (when (file-exists-p custom-file)
@@ -137,6 +140,12 @@
     (smtpmail-smtp-user     . "master@southfox.me")
     (mu4e-compose-signature . "---\nFor mu4e"))
   t)
+
+(setq sendmail-program "/usr/bin/msmtp"
+      send-mail-function #'smtpmail-send-it
+      message-sendmail-f-is-evil t
+      message-sendmail-extra-arguments '("--read-envelope-from")
+      message-send-mail-function #'message-send-mail-with-sendmail)
 
 ;; guess-word
 (use-package! guess-word)
@@ -339,6 +348,11 @@
         ("r" "reference" plain "%?"
          :if-new
          (file+head "reference/${title}.org" "#+title: ${title}\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("t" "ttk" plain "%?"
+         :if-new
+         (file+head "ttk/${title}.org" "#+title: ${title}\n")
          :immediate-finish t
          :unnarrowed t)
         ("a" "article" plain "%?"
