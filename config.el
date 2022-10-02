@@ -67,12 +67,13 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-badger)
 (cnfonts-mode 1)
+(beacon-mode 1)
 (setq word-wrap-by-category t)
 
 (load! "secrets")
-(setq-default custom-file (expand-file-name "secrets.el" doom-private-dir))
+(setq-default custom-file (expand-file-name "secrets.el" doom-user-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
 
@@ -80,6 +81,16 @@
   (mapc (lambda (hook)
           (add-hook hook function))
         hooks))
+
+;;clippy
+(map! :leader
+      (:prefix ("c h" . "Help info from Clippy")
+       :desc "Clippy describes function under point" "f" #'clippy-describe-function
+       :desc "Clippy describes variable under point" "v" #'clippy-describe-variable))
+
+;;shell
+(setq shell-file-name "/bin/zsh"
+      vterm-max-scrollback 5000)
 
 ;;font
 (add-to-list 'default-frame-alist '(height . 35))
@@ -129,7 +140,40 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;;mode
+;; debuger
+(after! dap-mode
+  (setq dap-python-debugger 'debugpy))
+
+(map! :map dap-mode-map
+      :leader
+      :prefix ("d" . "dap")
+      ;; basics
+      :desc "dap next"          "n" #'dap-next
+      :desc "dap step in"       "i" #'dap-step-in
+      :desc "dap step out"      "o" #'dap-step-out
+      :desc "dap continue"      "c" #'dap-continue
+      :desc "dap hydra"         "h" #'dap-hydra
+      :desc "dap debug restart" "r" #'dap-debug-restart
+      :desc "dap debug"         "s" #'dap-debug
+
+      ;; debug
+      :prefix ("dd" . "Debug")
+      :desc "dap debug recent"  "r" #'dap-debug-recent
+      :desc "dap debug last"    "l" #'dap-debug-last
+
+      ;; eval
+      :prefix ("de" . "Eval")
+      :desc "eval"                "e" #'dap-eval
+      :desc "eval region"         "r" #'dap-eval-region
+      :desc "eval thing at point" "s" #'dap-eval-thing-at-point
+      :desc "add expression"      "a" #'dap-ui-expressions-add
+      :desc "remove expression"   "d" #'dap-ui-expressions-remove
+
+      :prefix ("db" . "Breakpoint")
+      :desc "dap breakpoint toggle"      "b" #'dap-breakpoint-toggle
+      :desc "dap breakpoint condition"   "c" #'dap-breakpoint-condition
+      :desc "dap breakpoint hit count"   "h" #'dap-breakpoint-hit-condition
+      :desc "dap breakpoint log message" "l" #'dap-breakpoint-log-message)
 
 ;; mail
 (set-email-account! "southfox.me"
@@ -140,12 +184,6 @@
     (smtpmail-smtp-user     . "master@southfox.me")
     (mu4e-compose-signature . "---\nFor mu4e"))
   t)
-
-(setq sendmail-program "/usr/bin/msmtp"
-      send-mail-function #'smtpmail-send-it
-      message-sendmail-f-is-evil t
-      message-sendmail-extra-arguments '("--read-envelope-from")
-      message-send-mail-function #'message-send-mail-with-sendmail)
 
 ;; guess-word
 (use-package! guess-word)
@@ -165,7 +203,7 @@
         "KDic11万英汉词典"
         ))
 
-(map! :leader :desc "sdvc" "d" #'sdcv-search-pointer+)
+(map! :leader :desc "sdvc" "z" #'sdcv-search-pointer+)
 ;; rime
 (use-package! rime
   :custom
@@ -249,64 +287,24 @@
 ;;; org
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
+;; (defun org-summary-todo (n-done n-not-done)
+;;   "Switch entry to DONE when all subentries are done, to TODO otherwise."
+;;   (let (org-log-done org-log-states)   ; turn off logging
+;;     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+;; (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 (after! org
-  (setq org-directory "~/org/")
-  (setq org-image-actual-width '(400))
-  (setq org-link-search-must-match-exact-headline nil)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t))
+  (setq org-directory "~/org/"
+        org-ellipsis " ▼ "
+        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
+        org-image-actual-width '(400)
+        org-link-search-must-match-exact-headline nil
+        org-log-done 'time
+        org-log-into-drawer t))
 
 ;(setq org-emphasis-regexp-components '("-[:multibyte:][:space:]('\"{" "-[:multibyte:][:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
 ;(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 ;(org-element-update-syntax)
-
-;; super agenda
-(use-package! org-super-agenda
-  :commands org-super-agenda-mode)
-
-;; (after! org-agenda
-;;   (org-super-agenda-mode))
-
-;; (setq org-agenda-skip-scheduled-if-done t
-;;       org-agenda-skip-deadline-if-done t
-;;       org-agenda-include-deadlines t
-;;       org-agenda-block-separator nil
-;;       org-agenda-tags-column 100 ;; from testing this seems to be a good value
-;;       org-agenda-compact-blocks t)
-
-;; (setq org-agenda-custom-commands
-;;       '(("o" "Overview"
-;;          ((agenda "" ((org-agenda-span 'day)
-;;                       (org-agenda-start-day nil)
-;;                       (org-super-agenda-groups
-;;                        '((:name "降"
-;;                           :time-grid t
-;;                           :date today
-;;                           :scheduled today
-;;                           :order 1)))))
-;;           (alltodo "" ((org-agenda-overriding-header "")
-;;                        (org-super-agenda-groups
-;;                         '((:name "继"
-;;                            :todo "STRT"
-;;                            :order 1)
-;;                           (:name "急"
-;;                            :tag "急"
-;;                            :priority "A"
-;;                            :order 6)
-;;                           (:name "绷"
-;;                            :deadline today
-;;                            :order 2)
-;;                           (:name "临"
-;;                            :deadline future
-;;                            :order 8)
-;;                           (:name "逝"
-;;                            :deadline past
-;;                            :face error
-;;                            :order 7)
-;;                           (:name "待"
-;;                            :scheduled today
-;;                            :order 3)
-;;                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 
 ;; elfeed
  (after! elfeed
@@ -335,31 +333,66 @@
                               ("T" "Tickler" entry
                                (file+headline "~/Nextcloud/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U"))))
+;;roam-hugo
+(setq org-hugo-base-dir "~/Documents/roam-publish/")
+
+(defun my/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun my/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (daviwil/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun my/org-roam-export-all ()
+  "Re-exports all Org-roam files to Hugo markdown."
+  (interactive)
+  (dolist (org-file (my/org-roam-list-notes-by-tag "publish"))
+  ;(dolist (org-file (directory-files-recursively org-roam-directory "\.org$"))
+    (with-current-buffer (find-file org-file)
+        (org-hugo-export-wim-to-md))))
+
+(defun my/org-roam-creat-node ()
+  "creat node and add IS_NODE property"
+  (interactive)
+  (org-id-get-create)
+  (org-set-tags ":NODE:")
+  (save-buffer)
+  (org-hugo-export-wim-to-md))
 
 ;; org-roam
 (setq org-roam-directory "~/Nextcloud/Note/org-roam")
+(setq org-id-extra-files (org-roam--list-files org-roam-directory))
 (setq org-roam-capture-templates
       '(("m" "main" plain
          "%?"
          :if-new (file+head "main/${slug}.org"
-                            "#+title: ${title}\n")
+                            "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)
         ("r" "reference" plain "%?"
          :if-new
-         (file+head "reference/${title}.org" "#+title: ${title}\n")
+         (file+head "reference/${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)
         ("t" "ttk" plain "%?"
          :if-new
-         (file+head "ttk/${title}.org" "#+title: ${title}\n")
+         (file+head "ttk/${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)
         ("a" "article" plain "%?"
          :if-new
-         (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
+         (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article: :publish:\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)))
+
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry
+         "* %?"
+         :target (file+head "%<%Y-%m-%d>.org"
+                            "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n"))))
 
 ;; org-roam-ui
 (use-package! websocket

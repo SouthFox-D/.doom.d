@@ -51,11 +51,16 @@
 (package! rime)
 (package! cnfonts)
 (package! tldr)
+(package! beacon)
+(package! clippy)
+(package! parrot)
 
+(unpin! org-roam)
 (package! org-download)
 (package! org-transclusion)
 (package! org-fragtog)
 (package! org-roam-ui)
+(package! ox-hugo)
 
 (package! ace-pinyin
   :recipe (:host github :repo "cute-jumper/ace-pinyin"))
@@ -63,15 +68,12 @@
 (package! fanyi)
 (package! sdcv
   :recipe (:host github :repo "manateelazycat/sdcv"))
-
 (package! emacs-guess-word-game
   :recipe (:host github
   :repo "Qquanwei/emacs-guess-word-game" :files ("*")))
-
-(package! impatient-mode)
-
 (package! wallabag
   :recipe (:host github :repo "chenyanming/wallabag.el"
            :files ("*.el" "*.alist" "*.css")))
+(package! mastodon)
 
-(package! parrot)
+(package! impatient-mode)
