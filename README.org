@@ -1,0 +1,8 @@
+#+title: Readme
+狐狸自用全是二手缝合配置，用的是邪恶的 [[https://github.com/hlissner/doom-emacs][doomemacs]] 。
+
+** 资料
+https://www.youtube.com/watch?v=rCMh7srOqvw&list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj
+手把手的视频教程，可以用来入门 doom emacs
+https://tecosaur.github.io/emacs-config/config.html
+非常有用的进阶配置网页，覆盖了大多数的 doom emacs 配置包的配置。

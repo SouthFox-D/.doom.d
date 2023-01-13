@@ -191,6 +191,7 @@
       :n "A" #'mastodon-profile--get-toot-author
       :n "F" #'mastodon-tl--get-federated-timeline
       :n "H" #'mastodon-tl--get-home-timeline
+      :n "l" #'mastodon-tl--view-list-timeline
       :n "L" #'mastodon-tl--get-local-timeline
       :n "N" #'mastodon-notifications-get
       :n "P" #'mastodon-profile--show-user
@@ -397,7 +398,7 @@ Additionally, QUERY can be chosen as well."
                               ("T" "Tickler" entry
                                (file+headline "~/Nextcloud/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U"))))
-;;roam-hugo
+;; roam-hugo
 (setq org-hugo-base-dir "~/Documents/roam-publish/")
 
 (defun my/org-roam-filter-by-tag (tag-name)
@@ -477,16 +478,6 @@ Additionally, QUERY can be chosen as well."
 
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setq-local epa-file-encrypt-to '("master@southfox.me"))
-
-;; org-download
-(require 'org-download)
-(setq org-download-screenshot-method "flameshot gui --raw >%s")
-(setq-default org-download-heading-lvl nil)
-(setq-default org-download-image-dir "./images")
-(defun dummy-org-download-annotate-function (link)
-  "")
-(setq org-download-annotate-function
-      #'dummy-org-download-annotate-function)
 
 ;; org-transclusion
 (use-package! org-transclusion
