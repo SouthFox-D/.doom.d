@@ -48,12 +48,16 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
+;; (package! ef-themes)
+
+;; (package! exec-path-from-shell)
 (package! rime)
 (package! cnfonts)
 (package! tldr)
 (package! beacon)
 (package! clippy)
 (package! parrot)
+(package! restclient)
 
 (unpin! org-roam)
 (package! org-download)
@@ -61,13 +65,14 @@
 (package! org-fragtog)
 (package! org-roam-ui)
 (package! ox-hugo)
+(package! ob-restclient)
 
 (package! ace-pinyin
   :recipe (:host github :repo "cute-jumper/ace-pinyin"))
 
-(package! fanyi)
 (package! sdcv
   :recipe (:host github :repo "manateelazycat/sdcv"))
+;; (package! sdcv)
 (package! emacs-guess-word-game
   :recipe (:host github
   :repo "Qquanwei/emacs-guess-word-game" :files ("*")))

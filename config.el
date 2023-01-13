@@ -67,7 +67,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-badger)
+(setq doom-theme 'doom-one)
 (cnfonts-mode 1)
 (beacon-mode 1)
 (setq word-wrap-by-category t)
@@ -147,7 +147,7 @@
 (map! :map dap-mode-map
       :leader
       :prefix ("d" . "dap")
-      ;; basics
+      ;;; basics
       :desc "dap next"          "n" #'dap-next
       :desc "dap step in"       "i" #'dap-step-in
       :desc "dap step out"      "o" #'dap-step-out
@@ -156,12 +156,12 @@
       :desc "dap debug restart" "r" #'dap-debug-restart
       :desc "dap debug"         "s" #'dap-debug
 
-      ;; debug
+      ;;; debug
       :prefix ("dd" . "Debug")
       :desc "dap debug recent"  "r" #'dap-debug-recent
       :desc "dap debug last"    "l" #'dap-debug-last
 
-      ;; eval
+      ;;; eval
       :prefix ("de" . "Eval")
       :desc "eval"                "e" #'dap-eval
       :desc "eval region"         "r" #'dap-eval-region
@@ -174,6 +174,47 @@
       :desc "dap breakpoint condition"   "c" #'dap-breakpoint-condition
       :desc "dap breakpoint hit count"   "h" #'dap-breakpoint-hit-condition
       :desc "dap breakpoint log message" "l" #'dap-breakpoint-log-message)
+
+;; mastodon
+(map! :after mastodon
+      :map mastodon-mode-map
+      :n "[ [" #'mastodon-tl--goto-prev-toot
+      :n "] ]" #'mastodon-tl--goto-next-toot
+      :n "g k" #'mastodon-tl--previous-tab-item
+      :n "g j" #'mastodon-tl--next-tab-item
+
+      :n "q" #'kill-current-buffer
+      :n "Q" #'kill-buffer-and-window
+
+      ;;; timelines
+      :n "#" #'mastodon-tl--get-tag-timeline
+      :n "A" #'mastodon-profile--get-toot-author
+      :n "F" #'mastodon-tl--get-federated-timeline
+      :n "H" #'mastodon-tl--get-home-timeline
+      :n "L" #'mastodon-tl--get-local-timeline
+      :n "N" #'mastodon-notifications-get
+      :n "P" #'mastodon-profile--show-user
+      :n "T" #'mastodon-tl--thread
+
+      ;;; toot actions
+      :n "b" #'mastodon-toot--bookmark-toot-toggle
+      :n "B" #'mastodon-toot--toggle-boost
+      :n "c" #'mastodon-tl--toggle-spoiler-text-in-toot
+      :n "d" #'mastodon-toot--delete-toot
+      :n "D" #'mastodon-toot--delete-draft-toot
+      :n "f" #'mastodon-toot--toggle-favourite
+      :n "r" #'mastodon-toot--reply
+      :n "u" #'mastodon-tl--update
+      :n "v" #'mastodon-tl--poll-vote
+
+      ;;; toot!
+      :n "t" #'mastodon-toot
+
+      ;;; mastodon additions
+      :n "S" #'mastodon-search--search-query
+      :n "V F" #'mastodon-profile--view-favourites
+      :n "V B" #'mastodon-profile--view-bookmarks
+      )
 
 ;; mail
 (set-email-account! "southfox.me"
@@ -191,19 +232,15 @@
 
 ;;sdcv
 (setq sdcv-say-word-p t)
-(setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic"))
 
-(setq sdcv-dictionary-simple-list    ;setup dictionary list for simple search
-      '("懒虫简明英汉词典"
-        "KDic11万英汉词典"))
-
-(setq sdcv-dictionary-complete-list     ;setup dictionary list for complete search
-      '(
-        "懒虫简明英汉词典"
-        "KDic11万英汉词典"
-        ))
+(setq   sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic/"))
+        ;; sdcv-dictionary-simple-list (list "懒虫简明英汉词典"
+        ;;                                   "KDic11万英汉词典")
+        ;; sdcv-dictionary-complete-list (list "懒虫简明英汉词典"
+        ;;                                     "KDic11万英汉词典"))
 
 (map! :leader :desc "sdvc" "z" #'sdcv-search-pointer+)
+
 ;; rime
 (use-package! rime
   :custom
@@ -222,7 +259,9 @@
 (use-package! ace-pinyin
   :config
   (ace-pinyin-global-mode +1))
+
 ;; parrot
+(parrot-mode 1)
 (define-key evil-normal-state-map (kbd "[r") 'parrot-rotate-prev-word-at-point)
 (define-key evil-normal-state-map (kbd "]r") 'parrot-rotate-next-word-at-point)
 
@@ -252,7 +291,6 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
           (setq parrot-num-rotations 10)
-          (parrot-mode)
           (parrot-set-parrot-type 'emacs)))
 
 (defun my-parrot-thumbsup-play ()
@@ -302,9 +340,35 @@
         org-log-done 'time
         org-log-into-drawer t))
 
-;(setq org-emphasis-regexp-components '("-[:multibyte:][:space:]('\"{" "-[:multibyte:][:space:].,:!?;'\")}\\[" "[:space:]" "." 1))
-;(org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-;(org-element-update-syntax)
+(add-hook 'org-pomodoro-finished-hook
+                (lambda()
+                (org-roam-dailies-capture-today)))
+
+(defun ql--find-files-in-dir (ext dir &optional rec)
+  "Find files with EXT in DIR.
+REC searches recursively."
+  (split-string (shell-command-to-string
+                 (concat
+                  (format "fd --type f -e %s " ext)
+                  (unless rec "-d 1 ")
+                  (format ". %s" dir)))))
+
+(defun ql-org-ql--search (file &optional query)
+  "An Org-ql search allowing for the target FILE to be specified.
+Additionally, QUERY can be chosen as well."
+  (let ((target file)
+        (query (or query (read-from-minibuffer "Query: "))))
+    (funcall #'org-ql-search target query)))
+
+(defun my-org-ql-search-dailies (&optional query)
+  "Quickly search `ql-journal-directory' with optional QUERY."
+  (interactive)
+  (ql-org-ql--search (ql--find-files-in-dir 'org "~/Nextcloud/Note/org-roam/daily/") query))
+
+;; ob-restclient
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((restclient . t)))
 
 ;; elfeed
  (after! elfeed
