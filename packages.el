@@ -58,6 +58,8 @@
 (package! clippy)
 (package! parrot)
 (package! restclient)
+(package! ement
+  :recipe (:host github :repo "alphapapa/ement.el"))
 
 (unpin! org-roam)
 (package! org-download)

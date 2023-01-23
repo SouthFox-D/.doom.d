@@ -176,6 +176,10 @@
       :desc "dap breakpoint log message" "l" #'dap-breakpoint-log-message)
 
 ;; mastodon
+(map! :leader
+      :prefix ("o")
+      :desc "Mastodon"          "M" #'mastodon)
+
 (map! :after mastodon
       :map mastodon-mode-map
       :n "[ [" #'mastodon-tl--goto-prev-toot
@@ -191,16 +195,18 @@
       :n "A" #'mastodon-profile--get-toot-author
       :n "F" #'mastodon-tl--get-federated-timeline
       :n "H" #'mastodon-tl--get-home-timeline
-      :n "l" #'mastodon-tl--view-list-timeline
       :n "L" #'mastodon-tl--get-local-timeline
       :n "N" #'mastodon-notifications-get
+      :n "O" #'mastodon-profile--my-profile
       :n "P" #'mastodon-profile--show-user
       :n "T" #'mastodon-tl--thread
 
       ;;; toot actions
-      :n "b" #'mastodon-toot--bookmark-toot-toggle
-      :n "B" #'mastodon-toot--toggle-boost
+      :n "K" #'mastodon-toot--bookmark-toot-toggle
+      :n "R" #'mastodon-toot--toggle-boost
       :n "c" #'mastodon-tl--toggle-spoiler-text-in-toot
+      :n "C" #'mastodon-toot--copy-toot-url
+      :n "o" #'mastodon-url-lookup
       :n "d" #'mastodon-toot--delete-toot
       :n "D" #'mastodon-toot--delete-draft-toot
       :n "f" #'mastodon-toot--toggle-favourite
@@ -212,9 +218,10 @@
       :n "t" #'mastodon-toot
 
       ;;; mastodon additions
-      :n "S" #'mastodon-search--search-query
-      :n "V F" #'mastodon-profile--view-favourites
-      :n "V B" #'mastodon-profile--view-bookmarks
+      :n "S"    #'mastodon-search--search-query
+      :n "V F"  #'mastodon-profile--view-favourites
+      :n "V B"  #'mastodon-profile--view-bookmarks
+      :n "V L" #'mastodon-tl--view-list-timeline
       )
 
 ;; mail
@@ -488,3 +495,15 @@ Additionally, QUERY can be chosen as well."
                :leader
                :prefix "n"
                :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
+
+;; ement
+(setq ement-save-sessions t
+      ement-room-message-format-spec "%B%r%R%t")
+(map! :map ement-room-mode-map
+      :n "c e" #'ement-room-edit-message
+      :n "c m" #'ement-room-send-message
+      :n "c r" #'ement-room-send-reaction
+      :n "c i" #'ement-room-send-image
+      :n "c f" #'ement-room-send-file
+      :n "q"   #'kill-current-buffer
+      )
