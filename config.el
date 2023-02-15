@@ -67,7 +67,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'ef-spring)
 (cnfonts-mode 1)
 (beacon-mode 1)
 (setq word-wrap-by-category t)
@@ -96,9 +96,9 @@
 (add-to-list 'default-frame-alist '(height . 35))
 (add-to-list 'default-frame-alist '(width . 102))
 
-(setq doom-font (font-spec :size 16)
-      doom-big-font (font-spec :size 24)
-      doom-variable-pitch-font (font-spec :size 16))
+;; (setq doom-font (font-spec :size 16)
+;;       doom-big-font (font-spec :size 24)
+;;       doom-variable-pitch-font (font-spec :size 16))
 
 ;; dashboard banner
 (defun doom-dashboard-draw-ascii-emacs-banner-fn ()
@@ -255,7 +255,7 @@
   (default-input-method "rime")
   :config
   (define-key rime-mode-map (kbd "C-i") 'rime-force-enable)
-  (setq rime-show-candidate 'posframe)
+  (setq rime-show-candidate 'popup)
   (setq rime-disable-predicates
         '(rime-predicate-evil-mode-p
           rime-predicate-after-alphabet-char-p
@@ -341,8 +341,6 @@
 ;; (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
 (after! org
   (setq org-directory "~/org/"
-        org-ellipsis " ▼ "
-        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
         org-image-actual-width '(400)
         org-link-search-must-match-exact-headline nil
         org-log-done 'time
@@ -351,27 +349,6 @@
 (add-hook 'org-pomodoro-finished-hook
                 (lambda()
                 (org-roam-dailies-capture-today)))
-
-(defun ql--find-files-in-dir (ext dir &optional rec)
-  "Find files with EXT in DIR.
-REC searches recursively."
-  (split-string (shell-command-to-string
-                 (concat
-                  (format "fd --type f -e %s " ext)
-                  (unless rec "-d 1 ")
-                  (format ". %s" dir)))))
-
-(defun ql-org-ql--search (file &optional query)
-  "An Org-ql search allowing for the target FILE to be specified.
-Additionally, QUERY can be chosen as well."
-  (let ((target file)
-        (query (or query (read-from-minibuffer "Query: "))))
-    (funcall #'org-ql-search target query)))
-
-(defun my-org-ql-search-dailies (&optional query)
-  "Quickly search `ql-journal-directory' with optional QUERY."
-  (interactive)
-  (ql-org-ql--search (ql--find-files-in-dir 'org "~/Nextcloud/Note/org-roam/daily/") query))
 
 ;; ob-restclient
 (org-babel-do-load-languages
