@@ -70,6 +70,7 @@
 (setq doom-theme 'ef-spring)
 (cnfonts-mode 1)
 (beacon-mode 1)
+(good-scroll-mode 1)
 (setq word-wrap-by-category t)
 
 (load! "secrets")
@@ -237,6 +238,77 @@
 ;; guess-word
 (use-package! guess-word)
 (setq guess-word-org-file (f-expand "~/Nextcloud/Documents/my-esl.org"))
+
+;;calibre
+(setq calibredb-root-dir "~/Nextcloud/Ebook")
+(setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
+(setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "catalog.bib"))
+(setq bibtex-completion-pdf-field "File")
+(setq bibtex-completion-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
+(setq citar-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
+
+(setq calibredb-format-all-the-icons t)
+(map! :map calibredb-show-mode-map
+      :n "?" #'calibredb-entry-dispatch
+      :n "o" #'calibredb-find-file
+      :n "O" #'calibredb-find-file-other-frame
+      :n "V" #'calibredb-open-file-with-default-tool
+      :n "s" #'calibredb-set-metadata-dispatch
+      :n "e" #'calibredb-export-dispatch
+      :n "q" #'calibredb-entry-quit
+      :n "." #'calibredb-open-dired
+      :n [tab] #'calibredb-toggle-view-at-point
+      :n "M-t" #'calibredb-set-metadata--tags
+      :n "M-a" #'calibredb-set-metadata--author_sort
+      :n "M-A" #'calibredb-set-metadata--authors
+      :n "M-T" #'calibredb-set-metadata--title
+      :n "M-c" #'calibredb-set-metadata--comments)
+(map! :map calibredb-search-mode-map
+      :n [mouse-3] #'calibredb-search-mouse
+      :n "RET" #'calibredb-find-file
+      :n "?" #'calibredb-dispatch
+      :n "a" #'calibredb-add
+      :n "A" #'calibredb-add-dir
+      :n "c" #'calibredb-clone
+      :n "d" #'calibredb-remove
+      :n "D" #'calibredb-remove-marked-items
+      :n "j" #'calibredb-next-entry
+      :n "k" #'calibredb-previous-entry
+      :n "l" #'calibredb-virtual-library-list
+      :n "L" #'calibredb-library-list
+      :n "n" #'calibredb-virtual-library-next
+      :n "N" #'calibredb-library-next
+      :n "p" #'calibredb-virtual-library-previous
+      :n "P" #'calibredb-library-previous
+      :n "s" #'calibredb-set-metadata-dispatch
+      :n "S" #'calibredb-switch-library
+      :n "o" #'calibredb-find-file
+      :n "O" #'calibredb-find-file-other-frame
+      :n "v" #'calibredb-view
+      :n "V" #'calibredb-open-file-with-default-tool
+      :n "." #'calibredb-open-dired
+      :n "b" #'calibredb-catalog-bib-dispatch
+      :n "e" #'calibredb-export-dispatch
+      :n "r" #'calibredb-search-refresh-and-clear-filter
+      :n "R" #'calibredb-search-clear-filter
+      :n "q" #'calibredb-search-quit
+      :n "m" #'calibredb-mark-and-forward
+      :n "f" #'calibredb-toggle-favorite-at-point
+      :n "x" #'calibredb-toggle-archive-at-point
+      :n "h" #'calibredb-toggle-highlight-at-point
+      :n "u" #'calibredb-unmark-and-forward
+      :n "i" #'calibredb-edit-annotation
+      :n "DEL" #'calibredb-unmark-and-backward
+      :n [backtab] #'calibredb-toggle-view
+      :n [tab] #'calibredb-toggle-view-at-point
+      :n "M-n" #'calibredb-show-next-entry
+      :n "M-p" #'calibredb-show-previous-entry
+      :n "/" #'calibredb-search-live-filter
+      :n "M-t" #'calibredb-set-metadata--tags
+      :n "M-a" #'calibredb-set-metadata--author_sort
+      :n "M-A" #'calibredb-set-metadata--authors
+      :n "M-T" #'calibredb-set-metadata--title
+      :n "M-c" #'calibredb-set-metadata--comments)
 
 ;;sdcv
 (setq sdcv-say-word-p t)
@@ -417,23 +489,23 @@
 (setq org-roam-capture-templates
       '(("m" "main" plain
          "%?"
-         :if-new (file+head "main/${slug}.org"
+         :if-new (file+head "main/%<%Y%m%d%H%M%S>-${slug}.org"
                             "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)
-        ("r" "reference" plain "%?"
+        ("r" "references" plain "%?"
          :if-new
-         (file+head "reference/${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
+         (file+head "references/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)
         ("t" "ttk" plain "%?"
          :if-new
-         (file+head "ttk/${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
+         (file+head "ttk/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)
         ("a" "article" plain "%?"
          :if-new
-         (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article: :publish:\n#+hugo_auto_set_lastmod: t\n")
+         (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article: :publish:\n#+hugo_auto_set_lastmod: t\n")
          :immediate-finish t
          :unnarrowed t)))
 
@@ -462,16 +534,6 @@
 
 (setq epa-file-cache-passphrase-for-symmetric-encryption t)
 (setq-local epa-file-encrypt-to '("master@southfox.me"))
-
-;; org-transclusion
-(use-package! org-transclusion
-              :after org
-              :init
-              (map!
-               :map global-map "<f12>" #'org-transclusion-add
-               :leader
-               :prefix "n"
-               :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
 
 ;; ement
 (setq ement-save-sessions t

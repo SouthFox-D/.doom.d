@@ -64,7 +64,6 @@
 
 (unpin! org-roam)
 (package! org-download)
-(package! org-transclusion)
 (package! org-fragtog)
 (package! org-roam-ui)
 (package! ox-hugo)
@@ -83,8 +82,8 @@
   :recipe (:host github :repo "chenyanming/wallabag.el"
            :files ("*.el" "*.alist" "*.css")))
 (package! mastodon)
+(package! calibredb)
+(package! iscroll)
+(package! good-scroll)
 
 (package! impatient-mode)
-
-(package! transient :pin "c2bdf7e12c530eb85476d3aef317eb2941ab9440")
-(package! with-editor :pin "391e76a256aeec6b9e4cbd733088f30c677d965b")
