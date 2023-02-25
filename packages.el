@@ -69,15 +69,8 @@
 (package! ox-hugo)
 (package! ob-restclient)
 
-(package! ace-pinyin
-  :recipe (:host github :repo "cute-jumper/ace-pinyin"))
-
 (package! sdcv
   :recipe (:host github :repo "manateelazycat/sdcv"))
-;; (package! sdcv)
-(package! emacs-guess-word-game
-  :recipe (:host github
-  :repo "Qquanwei/emacs-guess-word-game" :files ("*")))
 (package! wallabag
   :recipe (:host github :repo "chenyanming/wallabag.el"
            :files ("*.el" "*.alist" "*.css")))

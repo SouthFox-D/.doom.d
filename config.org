@@ -1,8 +1,24 @@
-(setq doom-theme 'ef-spring) ;;春天来了！
+#+title: Config
+#+PROPERTY: header-args :tangle config.el
 
+现在我用的主题是……
+
+#+begin_src emacs-lisp
+(setq doom-theme 'ef-spring) ;;春天来了！
+#+end_src
+
+* 启动
+今日方知我是我：
+
+#+begin_src emacs-lisp
 (setq user-full-name "SouthFox"
       user-mail-address "master@southfox.me")
+#+end_src
 
+** 横幅
+替换 =Doom Emacs= 的横幅，用一只狐狸！
+
+#+begin_src emacs-lisp
 (defun doom-dashboard-draw-ascii-emacs-banner-fn ()
   (let* ((banner
           '("                                                                   ,           "
@@ -37,7 +53,13 @@
 
 ;(unless (display-graphic-p) ; for some reason this messes up the graphical splash screen atm
   (setq +doom-dashboard-ascii-banner-fn #'doom-dashboard-draw-ascii-emacs-banner-fn) ;)
+#+end_src
 
+* org-mode
+将 =org-log-into-drawer= 设为 =t= 后，完成任务后的时间戳将会收起，
+这样一些每天完成的任务就不会被相关时间戳占满。
+
+#+begin_src emacs-lisp
 (after! org
   (setq org-directory "~/org/"
         org-image-actual-width '(400)
@@ -45,6 +67,12 @@
         org-log-done 'time
         org-log-into-drawer t))
 
+#+end_src
+
+** org-capture
+一些捕获模板和路径设置，但说实在自从用了 =org-roam= 那边这边就没怎么管了。
+
+#+begin_src emacs-lisp
 (setq org-agenda-files '("~/Nextcloud/gtd/inbox.org"
                          "~/Nextcloud/gtd/gtd.org"
                          "~/Nextcloud/gtd/tickler.org"))
@@ -56,7 +84,13 @@
                               ("T" "Tickler" entry
                                (file+headline "~/Nextcloud/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U"))))
+#+end_src
 
+** org-roam
+主要是一些捕获模板设置，文件命名加上时间还是因为导出到数字花园时会放在一个文件夹里，
+而为了避免重名。
+
+#+begin_src emacs-lisp
 (setq org-roam-directory "~/Nextcloud/Note/org-roam")
 (setq org-roam-capture-templates
       '(("m" "main" plain
@@ -86,7 +120,13 @@
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n"))))
+#+end_src
 
+** org-roam-ui
+非常酷炫的一个网页 =roam= 笔记查看，可惜如果能够只查看某个节点就好了，
+数据量一大我怕打开会直接卡死。
+
+#+begin_src emacs-lisp
 (use-package! websocket
     :after org-roam)
 
@@ -101,10 +141,21 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+#+end_src
 
+** org-fragtog
+好像是 =latex= 相关的预览包……？
+
+#+begin_src emacs-lisp
 (use-package! org-fragtog
   :hook (org-mode . org-fragtog-mode))
+#+end_src
 
+** roam-publish
+一些从世界各地拼出来的代码，还有一些自己单纯堆叠调用的函数，
+我真该系统学学 =elisp= +1 。
+
+#+begin_src emacs-lisp
 (setq org-hugo-base-dir "~/Documents/roam-publish/")
 
 (defun my/org-roam-filter-by-tag (tag-name)
@@ -139,21 +190,43 @@
   (org-set-tags ":NODE:")
   (save-buffer)
   (org-hugo-export-wim-to-md))
+#+end_src
 
+** ob-restclient
+在代码块中发送 =HTTP= 请求，感觉十分利好一些 =api= 文档啊。
+
+#+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((restclient . t)))
+#+end_src
 
+* 杂项
+=cnfonts= 是一个可以分别设置中英文字体的 bk ，方便对其表格。
+
+=word-wrap-by-category= 是中文优化，当一行有英文和中文时不折行。
+
+#+begin_src emacs-lisp
 (cnfonts-mode 1)
 (good-scroll-mode 1)
 (setq word-wrap-by-category t)
 
 (add-to-list 'default-frame-alist '(height . 35))
 (add-to-list 'default-frame-alist '(width . 102))
+#+end_src
 
+** Shell
+将使用的终端切换到 =zsh= 。
+
+#+begin_src emacs-lisp
 (setq shell-file-name "/bin/zsh"
       vterm-max-scrollback 5000)
+#+end_src
 
+** TODO 派对鹦鹉
+快捷键和词典，但说实在没用过这功能，毕竟这个包的重点当然是在动图上。
+
+#+begin_src emacs-lisp
 (parrot-mode 1)
 (define-key evil-normal-state-map (kbd "[r") 'parrot-rotate-prev-word-at-point)
 (define-key evil-normal-state-map (kbd "]r") 'parrot-rotate-next-word-at-point)
@@ -181,11 +254,21 @@
         (:rot ("ifdef" "ifndef"))
         ))
 
+#+end_src
+
+定义一个可以钩住多个 =hook= 的函数，我感觉我不学 =elisp= 的话真不行了啊……
+
+#+begin_src emacs-lisp
 (defun my-add-to-multiple-hooks (function hooks)
   (mapc (lambda (hook)
           (add-hook hook function))
         hooks))
+#+end_src
 
+之后将在完成一个番茄钟播放点赞动画，保存一个文件时播放 =emacs= 动画等等，
+感觉真该学学 =elisp= 了啊，必须得重构这段了。
+
+#+begin_src emacs-lisp
 (add-hook 'emacs-startup-hook
           (lambda ()
           (setq parrot-num-rotations 10)
@@ -219,21 +302,35 @@
  'my-parrot-rotating-play
  '(elfeed-search-mode-hook
    mu4e-main-mode-hook))
+#+end_src
 
+** 其它文件
+存放一些 =token= 的秘密文件，应该注意不能随 =git= 上传或者同步。
+
+#+begin_src emacs-lisp
 (load! "secrets")
 (setq-default custom-file (expand-file-name "secrets.el" doom-user-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
+#+end_src
 
+* 文献管理
+** Citar
+#+begin_src emacs-lisp
 (setq bibtex-completion-pdf-field "File")
 (setq bibtex-completion-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
 (setq citar-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
+#+end_src
 
+** Calibre
+#+begin_src emacs-lisp
 (setq calibredb-root-dir "~/Nextcloud/Ebook")
 (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
 (setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "catalog.bib"))
 (setq calibredb-format-all-the-icons t)
+#+end_src
 
+#+begin_src emacs-lisp
 (map! :map calibredb-show-mode-map
       :n "?" #'calibredb-entry-dispatch
       :n "o" #'calibredb-find-file
@@ -296,16 +393,41 @@
       :n "M-T" #'calibredb-set-metadata--title
       :n "M-c" #'calibredb-set-metadata--comments)
 
+#+end_src
+
+* 工具
+** SDCV
+翻译包，词典要自己下，同时不要忘了安装 =stardict= 和 =sdcv= 这两个软件。
+
+#+begin_src emacs-lisp
 (setq sdcv-say-word-p t)
 (setq   sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic/"))
 
 (map! :leader :desc "sdvc" "z" #'sdcv-search-pointer+)
+#+end_src
 
+** Clippy
+一些远古的回忆……
+
+#+begin_src emacs-lisp
 (map! :leader
       (:prefix ("c h" . "Help info from Clippy")
        :desc "Clippy describes function under point" "f" #'clippy-describe-function
        :desc "Clippy describes variable under point" "v" #'clippy-describe-variable))
+#+end_src
 
+** Mastodon
+使用 [[https://codeberg.org/martianh/mastodon.el][mastodon.el]] 在无所事事时快速打开 =Mastodon= 进行一个鱼的摸！
+
+#+begin_src emacs-lisp :tangle no
+(setq mastodon-instance-url "https://social.instance.org"
+      mastodon-active-user "example_user")
+#+end_src
+
+然后设置按键绑定，现在的设置还有一些问题，主要是要在不干扰 =evil= 快捷键的
+情况下塞入新的按键还是挺难的。
+
+#+begin_src emacs-lisp
 (map! :leader
       :prefix ("o")
       :desc "Mastodon"          "M" #'mastodon)
@@ -353,9 +475,20 @@
       :n "V B"  #'mastodon-profile--view-bookmarks
       :n "V L" #'mastodon-tl--view-list-timeline
       )
+#+end_src
 
+** Beacon
+在快速滚动时也不跟丢光标。
+
+#+begin_src emacs-lisp
 (beacon-mode 1)
+#+end_src
 
+** Matrix
+=ement= 是一个 =Matrix= 协议下的客户端，虽然一些功能很残缺，
+但在 =emacs= 里能聊上就够了。
+
+#+begin_src emacs-lisp
 (setq ement-save-sessions t
       ement-room-message-format-spec "%B%r%R%t")
 (map! :map ement-room-mode-map
@@ -366,7 +499,17 @@
       :n "c f" #'ement-room-send-file
       :n "q"   #'kill-current-buffer
       )
+#+end_src
 
+将 =ement-save-sessions= 设为 =t= 则将帐号信息保存到磁盘里，要不然帐号
+会显示几百个设备了。
+
+=ement-room-message-format-spec= 是聊天界面的布局，挑了一个预设里最顺眼的。
+** Debuger
+说来惭愧，其实没怎么用过，
+或者说还需要调优才能追上 =VS code= 的使用体验。
+
+#+begin_src emacs-lisp
 (after! dap-mode
   (setq dap-python-debugger 'debugpy))
 
@@ -401,6 +544,12 @@
       :desc "dap breakpoint hit count"   "h" #'dap-breakpoint-hit-condition
       :desc "dap breakpoint log message" "l" #'dap-breakpoint-log-message)
 
+#+end_src
+
+** TODO Rime
+一个文本编辑器也可以内置输入法呢……
+
+#+begin_src emacs-lisp
 (use-package! rime
   :custom
   (default-input-method "rime")
@@ -413,7 +562,17 @@
           rime-predicate-space-after-cc-p
           rime-predicate-current-uppercase-letter-p
           rime-predicate-punctuation-line-begin-p)))
+#+end_src
 
+- [ ] 优化中英文切换断言
+- [ ] 如何在一些输入中自动切换到中文？例如 =org-roam=
+- [ ] 改键，现在的 =C \= 确实有点折磨
+
+* 信息
+更多信息请参考下面这篇文章：
+[[https://liujiacai.net/blog/2021/03/05/emacs-love-mail-feed/][使用 Emacs 阅读邮件与 RSS - Keep Coding]]
+** 邮件
+#+begin_src emacs-lisp
 (set-email-account! "southfox.me"
   '((mu4e-sent-folder       . "/southfox.me/Sent Mail")
     (mu4e-drafts-folder     . "/southfox.me/Drafts")
@@ -422,7 +581,14 @@
     (smtpmail-smtp-user     . "master@southfox.me")
     (mu4e-compose-signature . "---\nFor mu4e"))
   t)
+#+end_src
 
+** Rss
+设置打开 =elfeed= 时同时刷新源，
+所需源用专门的 =rss.org= 进行管理，
+对于一些访问不佳的源还得设置 =curl= 参数进行代理。
+
+#+begin_src emacs-lisp
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 
 (after! elfeed
@@ -432,3 +598,5 @@
                                       "--proxy" "socks5://127.0.0.1:10808"
                                       "--retry" "2"
                                       "--insecure")))
+#+end_src
+
