@@ -45,6 +45,27 @@
         org-log-done 'time
         org-log-into-drawer t))
 
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :config
+  (setq org-modern-star '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-modern-table-vertical 1
+        org-modern-table-horizontal 0.2
+        org-modern-list '((43 . "➤")
+                          (45 . "–")
+                          (42 . "•"))
+        org-modern-block-name
+        '((t . t)
+          ("src" "»" "«")
+          ("example" "»–" "–«")
+          ("quote" "❝" "❞")
+          ("export" "⏩" "⏪"))
+        org-modern-progress nil
+        org-modern-priority nil
+        org-modern-horizontal-rule (make-string 36 ?─)
+        )
+  )
+
 (setq org-agenda-files '("~/Nextcloud/gtd/inbox.org"
                          "~/Nextcloud/gtd/gtd.org"
                          "~/Nextcloud/gtd/tickler.org"))
@@ -413,6 +434,15 @@
           rime-predicate-space-after-cc-p
           rime-predicate-current-uppercase-letter-p
           rime-predicate-punctuation-line-begin-p)))
+
+(setq leetcode-save-solutions t)
+(setq leetcode-directory "~/Documents/leetcode")
+
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
 
 (set-email-account! "southfox.me"
   '((mu4e-sent-folder       . "/southfox.me/Sent Mail")

@@ -69,6 +69,32 @@
 
 #+end_src
 
+** org-modern
+让 =org-mode= 变得更加好看！
+
+#+begin_src emacs-lisp
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :config
+  (setq org-modern-star '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-modern-table-vertical 1
+        org-modern-table-horizontal 0.2
+        org-modern-list '((43 . "➤")
+                          (45 . "–")
+                          (42 . "•"))
+        org-modern-block-name
+        '((t . t)
+          ("src" "»" "«")
+          ("example" "»–" "–«")
+          ("quote" "❝" "❞")
+          ("export" "⏩" "⏪"))
+        org-modern-progress nil
+        org-modern-priority nil
+        org-modern-horizontal-rule (make-string 36 ?─)
+        )
+  )
+#+end_src
+
 ** org-capture
 一些捕获模板和路径设置，但说实在自从用了 =org-roam= 那边这边就没怎么管了。
 
@@ -567,6 +593,24 @@
 - [ ] 优化中英文切换断言
 - [ ] 如何在一些输入中自动切换到中文？例如 =org-roam=
 - [ ] 改键，现在的 =C \= 确实有点折磨
+** 力扣
+一些语言需要保存文件才有 =lsp= 支持……我真得需要 =lsp=
+
+#+begin_src emacs-lisp
+(setq leetcode-save-solutions t)
+(setq leetcode-directory "~/Documents/leetcode")
+#+end_src
+
+** Company
+补全……离不开的东西。
+
+#+begin_src emacs-lisp
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+#+end_src
 
 * 信息
 更多信息请参考下面这篇文章：

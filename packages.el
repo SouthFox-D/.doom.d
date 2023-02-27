@@ -68,6 +68,7 @@
 (package! org-roam-ui)
 (package! ox-hugo)
 (package! ob-restclient)
+(package! org-modern)
 
 (package! sdcv
   :recipe (:host github :repo "manateelazycat/sdcv"))
@@ -76,6 +77,7 @@
            :files ("*.el" "*.alist" "*.css")))
 (package! mastodon)
 (package! calibredb)
+(package! leetcode)
 (package! iscroll)
 (package! good-scroll)
 
