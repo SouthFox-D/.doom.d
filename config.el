@@ -441,8 +441,7 @@
 (after! company
   (setq company-idle-delay 0.5
         company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
-  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+  (setq company-show-numbers t))
 
 (set-email-account! "southfox.me"
   '((mu4e-sent-folder       . "/southfox.me/Sent Mail")
