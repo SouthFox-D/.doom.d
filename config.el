@@ -1,4 +1,4 @@
-(setq doom-theme 'ef-spring) ;;春天来了！
+(setq doom-theme 'ef-summer) ;; 夏天来了！
 
 (setq user-full-name "SouthFox"
       user-mail-address "master@southfox.me")
