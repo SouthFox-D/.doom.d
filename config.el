@@ -387,6 +387,10 @@
       :n "c f" #'ement-room-send-file
       :n "q"   #'kill-current-buffer
       )
+(map! :map ement-room-list-mode-map
+      :n "RET" #'ement-room-list-RET
+      :n "q"   #'kill-current-buffer
+      )
 
 (after! dap-mode
   (setq dap-python-debugger 'debugpy))
