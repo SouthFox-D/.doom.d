@@ -106,7 +106,9 @@
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n"))))
+                            ":PROPERTIES:
+:header-args:  :exports both\n:END:
+#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n"))))
 
 (use-package! websocket
     :after org-roam)
@@ -250,7 +252,7 @@
 (setq bibtex-completion-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
 (setq citar-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
 
-(setq calibredb-root-dir "~/Nextcloud/Ebook")
+(setq calibredb-root-dir "~/Documents/Ebook")
 (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
 (setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "catalog.bib"))
 (setq calibredb-format-all-the-icons t)
