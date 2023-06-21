@@ -450,7 +450,7 @@
   (setq company-show-numbers t))
 
 (set-email-account! "southfox.me"
-  '((mu4e-sent-folder       . "/southfox.me/Sent Mail")
+  '((mu4e-sent-folder       . "/Sent")
     (mu4e-drafts-folder     . "/southfox.me/Drafts")
     (mu4e-trash-folder      . "/southfox.me/Trash")
     (mu4e-refile-folder     . "/southfox.me/All Mail")
