@@ -449,6 +449,9 @@
         company-minimum-prefix-length 2)
   (setq company-show-numbers t))
 
+(use-package! screenshot
+  :defer t)
+
 (set-email-account! "southfox.me"
   '((mu4e-sent-folder       . "/Sent")
     (mu4e-drafts-folder     . "/southfox.me/Drafts")
