@@ -66,19 +66,19 @@
         )
   )
 
-(setq org-agenda-files '("~/Nextcloud/gtd/inbox.org"
-                         "~/Nextcloud/gtd/gtd.org"
-                         "~/Nextcloud/gtd/tickler.org"))
+(setq org-agenda-files '("~/Sync/gtd/inbox.org"
+                         "~/Sync/gtd/gtd.org"
+                         "~/Sync/gtd/tickler.org"))
 
 (after! org
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                               (file "~/Nextcloud/gtd/inbox.org")
+                               (file "~/Sync/gtd/inbox.org")
                                "* TODO %i%? \n SCHEDULED: %t")
                               ("T" "Tickler" entry
-                               (file+headline "~/Nextcloud/gtd/tickler.org" "Tickler")
+                               (file+headline "~/Sync/gtd/tickler.org" "Tickler")
                                "* %i%? \n %U"))))
 
-(setq org-roam-directory "~/Nextcloud/Note/org-roam")
+(setq org-roam-directory "~/Sync/Note/org-roam")
 (setq org-roam-capture-templates
       '(("m" "main" plain
          "%?"
@@ -249,8 +249,8 @@
   (load custom-file))
 
 (setq bibtex-completion-pdf-field "File")
-(setq bibtex-completion-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
-(setq citar-bibliography '("~/Nextcloud/Ebook/catalog.bib"))
+(setq bibtex-completion-bibliography '("~/Sync/Ebook/catalog.bib"))
+(setq citar-bibliography '("~/Sync/Ebook/catalog.bib"))
 
 (setq calibredb-root-dir "~/Documents/Ebook")
 (setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
@@ -465,7 +465,7 @@
 
 (after! elfeed
   (setq elfeed-search-filter "@6-month-ago +unread")
-  (setq rmh-elfeed-org-files '("~/Nextcloud/rss/rss.org"))
+  (setq rmh-elfeed-org-files '("~/Sync/org/rss.org"))
   (setq elfeed-curl-extra-arguments '("-H Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36"
                                       "--proxy" "socks5://127.0.0.1:10808"
                                       "--retry" "2"
