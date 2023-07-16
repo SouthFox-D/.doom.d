@@ -66,19 +66,19 @@
         )
   )
 
-(setq org-agenda-files '("~/Sync/gtd/inbox.org"
-                         "~/Sync/gtd/gtd.org"
-                         "~/Sync/gtd/tickler.org"))
+(setq org-agenda-files '("~/Sync/org/GTD/inbox.org"
+                         "~/Sync/org/GTD/gtd.org"
+                         "~/Sync/org/GTD/tickler.org"))
 
 (after! org
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                               (file "~/Sync/gtd/inbox.org")
+                               (file "~/Sync/org/GTD/inbox.org")
                                "* TODO %i%? \n SCHEDULED: %t")
                               ("T" "Tickler" entry
-                               (file+headline "~/Sync/gtd/tickler.org" "Tickler")
+                               (file+headline "~/Sync/org/GTD/tickler.org" "Tickler")
                                "* %i%? \n %U"))))
 
-(setq org-roam-directory "~/Sync/Note/org-roam")
+(setq org-roam-directory "~/Sync/org/Note/org-roam")
 (setq org-roam-capture-templates
       '(("m" "main" plain
          "%?"

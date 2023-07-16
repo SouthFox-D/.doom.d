@@ -99,16 +99,16 @@
 一些捕获模板和路径设置，但说实在自从用了 =org-roam= 那边这边就没怎么管了。
 
 #+begin_src emacs-lisp
-(setq org-agenda-files '("~/Sync/gtd/inbox.org"
-                         "~/Sync/gtd/gtd.org"
-                         "~/Sync/gtd/tickler.org"))
+(setq org-agenda-files '("~/Sync/org/GTD/inbox.org"
+                         "~/Sync/org/GTD/gtd.org"
+                         "~/Sync/org/GTD/tickler.org"))
 
 (after! org
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                               (file "~/Sync/gtd/inbox.org")
+                               (file "~/Sync/org/GTD/inbox.org")
                                "* TODO %i%? \n SCHEDULED: %t")
                               ("T" "Tickler" entry
-                               (file+headline "~/Sync/gtd/tickler.org" "Tickler")
+                               (file+headline "~/Sync/org/GTD/tickler.org" "Tickler")
                                "* %i%? \n %U"))))
 #+end_src
 
@@ -117,7 +117,7 @@
 而为了避免重名。
 
 #+begin_src emacs-lisp
-(setq org-roam-directory "~/Sync/Note/org-roam")
+(setq org-roam-directory "~/Sync/org/Note/org-roam")
 (setq org-roam-capture-templates
       '(("m" "main" plain
          "%?"
