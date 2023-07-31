@@ -78,8 +78,6 @@
 (package! mastodon)
 (package! calibredb)
 (package! leetcode)
-(package! iscroll)
-(package! good-scroll)
 (package! screenshot
   :recipe (:host github :repo "tecosaur/screenshot"))
 

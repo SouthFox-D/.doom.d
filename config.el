@@ -168,7 +168,6 @@
  '((restclient . t)))
 
 (cnfonts-mode 1)
-(good-scroll-mode 1)
 (setq word-wrap-by-category t)
 
 (add-to-list 'default-frame-alist '(height . 35))
