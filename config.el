@@ -173,6 +173,9 @@
 (add-to-list 'default-frame-alist '(height . 35))
 (add-to-list 'default-frame-alist '(width . 102))
 
+(add-hook 'python-mode-hook  #'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+
 (setq shell-file-name "/bin/zsh"
       vterm-max-scrollback 5000)
 
@@ -469,3 +472,16 @@
                                       "--proxy" "socks5://127.0.0.1:10808"
                                       "--retry" "2"
                                       "--insecure")))
+
+(use-package! flycheck-clj-kondo
+  :after (clojure-mode))
+
+(use-package! clj-refactor
+  :after (clojure-mode))
+
+(use-package! paredit
+  :after (clojure-mode)
+  :config
+  (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'cider-repl-mode-hook 'enable-paredit-mode))

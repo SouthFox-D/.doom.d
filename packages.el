@@ -82,3 +82,9 @@
   :recipe (:host github :repo "tecosaur/screenshot"))
 
 (package! impatient-mode)
+
+;; clojure
+(unpin! (:lang clojure))
+(package! cider)
+(package! flycheck-clj-kondo)
+(package! clj-refactor)

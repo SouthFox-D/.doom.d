@@ -242,6 +242,12 @@
 (add-to-list 'default-frame-alist '(width . 102))
 #+end_src
 
+** 彩虹括号
+#+begin_src emacs-lisp
+(add-hook 'python-mode-hook  #'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+#+end_src
+
 ** Shell
 将使用的终端切换到 =zsh= 。
 
@@ -654,3 +660,22 @@
                                       "--insecure")))
 #+end_src
 
+
+* Clojure
+#+begin_src emacs-lisp
+(use-package! flycheck-clj-kondo
+  :after (clojure-mode))
+
+(use-package! clj-refactor
+  :after (clojure-mode))
+#+end_src
+
+** Paredit
+#+begin_src emacs-lisp
+(use-package! paredit
+  :after (clojure-mode)
+  :config
+  (add-hook 'clojure-mode-hook 'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+  (add-hook 'cider-repl-mode-hook 'enable-paredit-mode))
+#+end_src
