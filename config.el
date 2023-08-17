@@ -485,3 +485,5 @@
   (add-hook 'clojure-mode-hook 'enable-paredit-mode)
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
   (add-hook 'cider-repl-mode-hook 'enable-paredit-mode))
+
+(use-package! lsp-tailwindcss)

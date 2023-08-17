@@ -88,3 +88,6 @@
 (package! cider)
 (package! flycheck-clj-kondo)
 (package! clj-refactor)
+
+(package! lsp-tailwindcss
+  :recipe (:host github :repo "merrickluo/lsp-tailwindcss"))
