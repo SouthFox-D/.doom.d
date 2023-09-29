@@ -167,9 +167,17 @@
  'org-babel-load-languages
  '((restclient . t)))
 
+(setq cnfonts-personal-fontnames
+      '(()
+        ()
+        ("Noto Color Emoji")
+        ()
+        ()))
 (cnfonts-mode 1)
+
 (setq word-wrap-by-category t)
 
+(setq doom-unicode-font (font-spec :family "Noto Color Emoji"))
 (add-to-list 'default-frame-alist '(height . 35))
 (add-to-list 'default-frame-alist '(width . 102))
 
