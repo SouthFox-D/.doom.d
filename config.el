@@ -443,7 +443,7 @@
   (default-input-method "rime")
   :config
   (define-key rime-mode-map (kbd "C-i") 'rime-force-enable)
-  (setq rime-show-candidate 'popup)
+  (setq rime-show-candidate 'posframe)
   (setq rime-disable-predicates
         '(rime-predicate-evil-mode-p
           rime-predicate-after-alphabet-char-p
