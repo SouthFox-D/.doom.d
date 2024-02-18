@@ -254,6 +254,7 @@
    mu4e-main-mode-hook))
 
 (load! "secrets")
+(load! "elisp/hy")
 (setq-default custom-file (expand-file-name "secrets.el" doom-user-dir))
 (when (file-exists-p custom-file)
   (load custom-file))
