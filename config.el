@@ -1,4 +1,4 @@
-(setq doom-theme 'ef-kassio)
+(setq doom-theme 'ef-spring)
 
 (setq user-full-name "SouthFox"
       user-mail-address "master@southfox.me")
