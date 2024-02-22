@@ -1,5 +1,15 @@
 ;;; lisp/hy.el -*- lexical-binding: t; -*-
 
+(defun org-babel-execute:hy (body params)
+  "Execute a block of hylang code with org-babel."
+  (let ((in-file (org-babel-temp-file "n" ".hy"))
+        (verbosity (or (cdr (assq :verbosity params)) 0)))
+    (with-temp-file in-file
+      (insert body))
+    (org-babel-eval
+     (format "hy %s" (org-babel-process-file-name in-file))
+     "")))
+
 (defconst hy-font-lock--hy-builtins
   '("*map"
     "accumulate"
