@@ -687,8 +687,3 @@
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
   (add-hook 'cider-repl-mode-hook 'enable-paredit-mode))
 #+end_src
-
-* Tailwind css
-#+begin_src emacs-lisp
-(use-package! lsp-tailwindcss)
-#+end_src
