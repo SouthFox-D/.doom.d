@@ -327,6 +327,9 @@
         '(hy-font-lock-kwds)))
 
 ;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.hy\\'" . hy-mode))
+
+;;;###autoload
 (define-derived-mode hy-mode prog-mode "Hy"
   "Major mode for editing Hy files."
   (hy-mode--setup-font-lock))
