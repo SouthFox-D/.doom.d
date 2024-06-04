@@ -120,26 +120,21 @@
 (setq org-roam-directory "~/Sync/org/Note/org-roam")
 (setq org-roam-capture-templates
       '(("m" "main" plain
-         "%?"
-         :if-new (file+head "main/%<%Y%m%d%H%M%S>-${slug}.org"
-                            "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("r" "references" plain "%?"
-         :if-new
-         (file+head "references/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("t" "ttk" plain "%?"
-         :if-new
-         (file+head "ttk/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n")
-         :immediate-finish t
-         :unnarrowed t)
-        ("a" "article" plain "%?"
-         :if-new
-         (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article: :publish:\n#+hugo_auto_set_lastmod: t\n")
-         :immediate-finish t
-         :unnarrowed t)))
+	 "%?"
+	 :if-new (file+head "main/%<%Y%m%d%H%M%S>-${slug}.org"
+			    "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: main\n")
+	 :immediate-finish t
+	 :unnarrowed t)
+	("r" "references" plain "%?"
+	 :if-new
+	 (file+head "references/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: references\n")
+	 :immediate-finish t
+	 :unnarrowed t)
+	("a" "article" plain "%?"
+	 :if-new
+	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article: :publish:\n#+hugo_auto_set_lastmod: t\n#+hugo_section: articles\n")
+	 :immediate-finish t
+	 :unnarrowed t)))
 
 (setq org-roam-dailies-capture-templates
       '(("d" "default" entry
@@ -147,7 +142,7 @@
          :target (file+head "%<%Y-%m-%d>.org"
                             ":PROPERTIES:
 :header-args:  :exports both\n:END:
-#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n"))))
+#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
 #+end_src
 
 ** org-roam-ui
