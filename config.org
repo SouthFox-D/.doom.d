@@ -202,9 +202,15 @@
 (defun my/org-roam-publish ()
   "Publish current file"
   (interactive)
+  (org-roam-update-org-id-locations)
   (org-roam-set-keyword "filetags" ":publish:")
   (save-buffer)
-  (org-hugo-export-wim-to-md))
+  (org-hugo-export-wim-to-md)
+  (shell-command (concat "cd " org-hugo-base-dir
+                         " && " "git add ."
+                         " && " "git commit -m '[post] new post'"
+                         " && " "git push"))
+  (message "publish nwe post!"))
 
 (defun my/org-roam-creat-node ()
   "creat node and add IS_NODE property"
