@@ -93,7 +93,7 @@
 	 :unnarrowed t)
 	("a" "article" plain "%?"
 	 :if-new
-	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article: :publish:\n#+hugo_auto_set_lastmod: t\n#+hugo_section: articles\n")
+	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article:\n#+hugo_auto_set_lastmod: t\n#+hugo_section: articles\n")
 	 :immediate-finish t
 	 :unnarrowed t)))
 
@@ -101,9 +101,7 @@
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
-                            ":PROPERTIES:
-:header-args:  :exports both\n:END:
-#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
+                            "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
 
 (use-package! websocket
     :after org-roam)
