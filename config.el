@@ -151,9 +151,9 @@
   (async-shell-command (concat
                         "cd " org-hugo-base-dir
                         " && " "git add ."
-                        " && " "git commit -m '[post] new post'"
                         (if (yes-or-no-p "Push now?")
-                            (" && " "git push"))) "*Messages*")
+                            (concat " && " "git commit -m '[post] new post'"
+                                    " && " "git push"))) "*Messages*")
   (message "publish nwe post!"))
 
 (defun my/org-roam-creat-node ()
