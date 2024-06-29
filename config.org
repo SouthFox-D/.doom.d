@@ -365,79 +365,6 @@
 (setq citar-bibliography '("~/Sync/Ebook/catalog.bib"))
 #+end_src
 
-** Calibre
-#+begin_src emacs-lisp
-(setq calibredb-root-dir "~/Documents/Ebook")
-(setq calibredb-db-dir (expand-file-name "metadata.db" calibredb-root-dir))
-(setq calibredb-ref-default-bibliography (concat (file-name-as-directory calibredb-root-dir) "catalog.bib"))
-(setq calibredb-format-all-the-icons t)
-#+end_src
-
-#+begin_src emacs-lisp
-(map! :map calibredb-show-mode-map
-      :n "?" #'calibredb-entry-dispatch
-      :n "o" #'calibredb-find-file
-      :n "O" #'calibredb-find-file-other-frame
-      :n "V" #'calibredb-open-file-with-default-tool
-      :n "s" #'calibredb-set-metadata-dispatch
-      :n "e" #'calibredb-export-dispatch
-      :n "q" #'calibredb-entry-quit
-      :n "." #'calibredb-open-dired
-      :n [tab] #'calibredb-toggle-view-at-point
-      :n "M-t" #'calibredb-set-metadata--tags
-      :n "M-a" #'calibredb-set-metadata--author_sort
-      :n "M-A" #'calibredb-set-metadata--authors
-      :n "M-T" #'calibredb-set-metadata--title
-      :n "M-c" #'calibredb-set-metadata--comments)
-(map! :map calibredb-search-mode-map
-      :n [mouse-3] #'calibredb-search-mouse
-      :n "RET" #'calibredb-find-file
-      :n "?" #'calibredb-dispatch
-      :n "a" #'calibredb-add
-      :n "A" #'calibredb-add-dir
-      :n "c" #'calibredb-clone
-      :n "d" #'calibredb-remove
-      :n "D" #'calibredb-remove-marked-items
-      :n "j" #'calibredb-next-entry
-      :n "k" #'calibredb-previous-entry
-      :n "l" #'calibredb-virtual-library-list
-      :n "L" #'calibredb-library-list
-      :n "n" #'calibredb-virtual-library-next
-      :n "N" #'calibredb-library-next
-      :n "p" #'calibredb-virtual-library-previous
-      :n "P" #'calibredb-library-previous
-      :n "s" #'calibredb-set-metadata-dispatch
-      :n "S" #'calibredb-switch-library
-      :n "o" #'calibredb-find-file
-      :n "O" #'calibredb-find-file-other-frame
-      :n "v" #'calibredb-view
-      :n "V" #'calibredb-open-file-with-default-tool
-      :n "." #'calibredb-open-dired
-      :n "b" #'calibredb-catalog-bib-dispatch
-      :n "e" #'calibredb-export-dispatch
-      :n "r" #'calibredb-search-refresh-and-clear-filter
-      :n "R" #'calibredb-search-clear-filter
-      :n "q" #'calibredb-search-quit
-      :n "m" #'calibredb-mark-and-forward
-      :n "f" #'calibredb-toggle-favorite-at-point
-      :n "x" #'calibredb-toggle-archive-at-point
-      :n "h" #'calibredb-toggle-highlight-at-point
-      :n "u" #'calibredb-unmark-and-forward
-      :n "i" #'calibredb-edit-annotation
-      :n "DEL" #'calibredb-unmark-and-backward
-      :n [backtab] #'calibredb-toggle-view
-      :n [tab] #'calibredb-toggle-view-at-point
-      :n "M-n" #'calibredb-show-next-entry
-      :n "M-p" #'calibredb-show-previous-entry
-      :n "/" #'calibredb-search-live-filter
-      :n "M-t" #'calibredb-set-metadata--tags
-      :n "M-a" #'calibredb-set-metadata--author_sort
-      :n "M-A" #'calibredb-set-metadata--authors
-      :n "M-T" #'calibredb-set-metadata--title
-      :n "M-c" #'calibredb-set-metadata--comments)
-
-#+end_src
-
 * 工具
 ** SDCV
 翻译包，词典要自己下，同时不要忘了安装 =stardict= 和 =sdcv= 这两个软件。
@@ -520,38 +447,6 @@
       )
 #+end_src
 
-** Beacon
-在快速滚动时也不跟丢光标。
-
-#+begin_src emacs-lisp
-(beacon-mode 1)
-#+end_src
-
-** Matrix
-=ement= 是一个 =Matrix= 协议下的客户端，虽然一些功能很残缺，
-但在 =emacs= 里能聊上就够了。
-
-#+begin_src emacs-lisp
-(setq ement-save-sessions t
-      ement-room-message-format-spec "%B%r%R%t")
-(map! :map ement-room-mode-map
-      :n "c e" #'ement-room-edit-message
-      :n "c m" #'ement-room-send-message
-      :n "c r" #'ement-room-send-reaction
-      :n "c i" #'ement-room-send-image
-      :n "c f" #'ement-room-send-file
-      :n "q"   #'kill-current-buffer
-      )
-(map! :map ement-room-list-mode-map
-      :n "RET" #'ement-room-list-RET
-      :n "q"   #'kill-current-buffer
-      )
-#+end_src
-
-将 =ement-save-sessions= 设为 =t= 则将帐号信息保存到磁盘里，要不然帐号
-会显示几百个设备了。
-
-=ement-room-message-format-spec= 是聊天界面的布局，挑了一个预设里最顺眼的。
 ** Debuger
 说来惭愧，其实没怎么用过，
 或者说还需要调优才能追上 =VS code= 的使用体验。
@@ -630,12 +525,6 @@
   (setq company-idle-delay 0.5
         company-minimum-prefix-length 2)
   (setq company-show-numbers t))
-#+end_src
-
-** Screenshot
-#+begin_src emacs-lisp
-(use-package! screenshot
-  :defer t)
 #+end_src
 
 * 信息

@@ -48,19 +48,14 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
-;; (package! ef-themes)
 
-;; (package! exec-path-from-shell)
 (package! rime)
 (package! cnfonts)
 (package! tldr)
-(package! beacon)
 (package! clippy)
 (package! parrot)
 (package! restclient)
 (package! ef-themes)
-(package! ement
-  :recipe (:host github :repo "alphapapa/ement.el"))
 
 (unpin! org-roam)
 (package! org-download)
@@ -72,16 +67,8 @@
 
 (package! sdcv
   :recipe (:host github :repo "manateelazycat/sdcv"))
-(package! wallabag
-  :recipe (:host github :repo "chenyanming/wallabag.el"
-           :files ("*.el" "*.alist" "*.css")))
 (package! mastodon)
-(package! calibredb)
 (package! leetcode)
-(package! screenshot
-  :recipe (:host github :repo "tecosaur/screenshot"))
-
-(package! impatient-mode)
 
 ;; clojure
 (unpin! (:lang clojure))
