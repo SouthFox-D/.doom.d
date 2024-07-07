@@ -229,6 +229,19 @@
  'org-babel-load-languages
  '((restclient . t)))
 #+end_src
+* 宏
+** cond-let
+终于知道为什么没人想写这个宏了，括号是真得多啊。
+
+#+begin_src emacs-lisp
+(defmacro cond-let (forms)
+  (declare (debug t))
+  (if forms
+      `(let* ,(setq varlist (internal--build-bindings (caar forms)))
+         (if-let ,(car (last varlist))
+             ,(cadar forms)
+           (cond-let ,(cdr forms))))))
+#+end_src
 
 * 杂项
 =cnfonts= 是一个可以分别设置中英文字体的 bk ，方便对其表格。
