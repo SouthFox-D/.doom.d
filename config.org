@@ -214,7 +214,7 @@
       `(let* ,(setq varlist (internal--build-bindings (caar forms)))
          (if-let ,(car (last varlist))
              ,(cadar forms)
-           (cond-let ,(cdr forms))))))
+           (cond-let ,(cdr ,@forms))))))
 #+end_src
 
 * 杂项
