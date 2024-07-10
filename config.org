@@ -74,7 +74,6 @@
 
 #+begin_src emacs-lisp
 (setq org-agenda-files '("~/Sync/org/GTD/inbox.org"
-                         "~/Sync/org/GTD/gtd.org"
                          "~/Sync/org/GTD/tickler.org"))
 
 (after! org
@@ -115,6 +114,17 @@
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
+#+end_src
+*** garden
+数字花园，开始种植思想……
+
+#+begin_src emacs-lisp
+(defcustom org-roam-garden-file "~/Sync/org/GTD/garden.org"
+  "The file used by roam garden."
+  :group 'org-roam
+  :type 'string)
+
+(add-to-list 'org-agenda-files org-roam-garden-file)
 #+end_src
 
 ** org-roam-ui
