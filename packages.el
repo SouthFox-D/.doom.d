@@ -74,3 +74,6 @@
 (package! cider)
 (package! flycheck-clj-kondo)
 (package! clj-refactor)
+
+;; rust
+(unpin! rustic)
