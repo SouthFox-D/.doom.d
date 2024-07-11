@@ -308,11 +308,6 @@
 感觉真该学学 =elisp= 了啊，必须得重构这段了。
 
 #+begin_src emacs-lisp
-(add-hook 'emacs-startup-hook
-          (lambda ()
-          (setq parrot-num-rotations 10)
-          (parrot-set-parrot-type 'emacs)))
-
 (defun my-parrot-thumbsup-play ()
   (parrot-set-parrot-type 'thumbsup)
   (parrot-start-animation))
