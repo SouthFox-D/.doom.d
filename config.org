@@ -147,7 +147,7 @@
           (message "Plant exists, skip...")
         (goto-char (point-max))
         (insert (concat "* " heading "\n[[" file-path "]]"))
-        (org-schedule nil (format "<%s 22:00 ++1d >" (format-time-string "%Y-%m-%d %u")))
+        (org-schedule nil (format "<%s 22:00 ++3d >" (format-time-string "%Y-%m-%d %u")))
         (save-buffer)))))
 #+end_src
 
