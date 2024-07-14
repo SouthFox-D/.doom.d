@@ -115,7 +115,8 @@
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
 #+end_src
-*** garden
+
+*** Garden
 数字花园，开始种植思想……
 
 #+begin_src emacs-lisp
@@ -125,6 +126,29 @@
   :type 'string)
 
 (add-to-list 'org-agenda-files org-roam-garden-file)
+#+end_src
+
+#+begin_src emacs-lisp
+(defun org-roam-garden-plant ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let* ((node (org-roam-node-at-point))
+           (title (org-roam-node-title node))
+           (file (org-roam-node-file node)))
+      (org-set-property "GARDEN-STATE" "seedling")
+      (org-roam-update-garden-file title file))
+    (save-buffer)))
+
+(defun org-roam-update-garden-file (heading file-path)
+  (with-current-buffer (find-file-noselect org-roam-garden-file)
+    (let ((buffer (current-buffer)))
+      (if (org-find-exact-headline-in-buffer heading)
+          (message "Plant exists, skip...")
+        (goto-char (point-max))
+        (insert (concat "* " heading "\n[[" file-path "]]"))
+        (org-schedule nil (format "<%s 22:00 ++1d >" (format-time-string "%Y-%m-%d %u")))
+        (save-buffer)))))
 #+end_src
 
 ** org-roam-ui
