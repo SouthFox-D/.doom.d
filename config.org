@@ -149,6 +149,29 @@
         (insert (concat "* " heading "\n[[" file-path "]]"))
         (org-schedule nil (format "<%s 22:00 ++3d >" (format-time-string "%Y-%m-%d %u")))
         (save-buffer)))))
+
+(defun my/org-roam-filter-by-properties (properties-name)
+  (lambda (node)
+    (assoc properties-name (org-roam-node-properties node))))
+
+(defun my/org-roam-list-notes-by-properties (properties-name)
+  (seq-filter
+   (my/org-roam-filter-by-properties properties-name)
+   (org-roam-node-list)))
+
+(defun my/org-roam-garden-dashboard--build-item (node)
+  (concat "\n** " (org-roam-node-title node) "\n[[" (org-roam-node-file node) "]]"))
+
+(defun my/org-roam-garden-dashboard ()
+  (interactive)
+  (with-current-buffer (get-buffer-create "*Garden*")
+    (erase-buffer)
+    (let ((filtered-node (my/org-roam-list-notes-by-properties "GARDEN-STATE")))
+      (insert "* 🌱 seedling")
+      (insert (string-join (mapcar #'my/org-roam-garden-dashboard--build-item
+                                   filtered-node))))
+    (org-mode)
+    (switch-to-buffer (current-buffer))))
 #+end_src
 
 ** org-roam-ui
