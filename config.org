@@ -641,3 +641,22 @@
 
 (add-to-list 'window-buffer-change-functions 'my/track-python-virtualenv)
 #+end_src
+
+同时启用 pylint 和 pyright-lsp 。
+
+#+begin_src emacs-lisp
+(defvar-local my/flycheck-local-cache nil)
+
+(defun my/flycheck-checker-get (fn checker property)
+  (or (alist-get property (alist-get checker my/flycheck-local-cache))
+      (funcall fn checker property)))
+
+(advice-add 'flycheck-checker-get :around 'my/flycheck-checker-get)
+
+(add-hook 'lsp-managed-mode-hook
+          (lambda ()
+            (when (and (string= nil (file-remote-p default-directory))
+                       (derived-mode-p 'python-mode))
+              (setq my/flycheck-local-cache '((lsp . ((next-checkers . (python-pylint)))))))))
+
+#+end_src
