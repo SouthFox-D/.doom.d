@@ -389,11 +389,6 @@
  'my-parrot-emacs-play
  '(after-save-hook
    find-file-hook))
-
-(my-add-to-multiple-hooks
- 'my-parrot-rotating-play
- '(elfeed-search-mode-hook
-   mu4e-main-mode-hook))
 #+end_src
 
 ** 其它文件
@@ -590,23 +585,6 @@
     (smtpmail-smtp-user     . "master@southfox.me")
     (mu4e-compose-signature . "---\nFor mu4e"))
   t)
-#+end_src
-
-** Rss
-设置打开 =elfeed= 时同时刷新源，
-所需源用专门的 =rss.org= 进行管理，
-对于一些访问不佳的源还得设置 =curl= 参数进行代理。
-
-#+begin_src emacs-lisp
-(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
-
-(after! elfeed
-  (setq elfeed-search-filter "@6-month-ago +unread")
-  (setq rmh-elfeed-org-files '("~/Sync/org/rss.org"))
-  (setq elfeed-curl-extra-arguments '("-H Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.7113.93 Safari/537.36"
-                                      "--proxy" "socks5://127.0.0.1:10808"
-                                      "--retry" "2"
-                                      "--insecure")))
 #+end_src
 
 * Clojure
