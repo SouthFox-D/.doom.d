@@ -4,7 +4,7 @@
 现在我用的主题是……
 
 #+begin_src emacs-lisp
-(setq doom-theme 'ef-melissa-dark)
+(setq doom-theme 'ef-dream)
 #+end_src
 
 * 启动
