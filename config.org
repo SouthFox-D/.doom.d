@@ -562,16 +562,6 @@
 (setq leetcode-directory "~/Documents/leetcode")
 #+end_src
 
-** Company
-补全……离不开的东西。
-
-#+begin_src emacs-lisp
-(after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2)
-  (setq company-show-numbers t))
-#+end_src
-
 * 信息
 更多信息请参考下面这篇文章：
 [[https://liujiacai.net/blog/2021/03/05/emacs-love-mail-feed/][使用 Emacs 阅读邮件与 RSS - Keep Coding]]
