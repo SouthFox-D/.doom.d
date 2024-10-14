@@ -222,7 +222,7 @@
 (defun my/org-roam-list-notes-by-tag (tag-name)
   (mapcar #'org-roam-node-file
           (seq-filter
-           (daviwil/org-roam-filter-by-tag tag-name)
+           (my/org-roam-filter-by-tag tag-name)
            (org-roam-node-list))))
 
 (defun my/org-roam-export-all ()
