@@ -114,6 +114,11 @@
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
                             "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
+
+(with-eval-after-load 'ox-hugo
+  (setq org-hugo-anchor-functions '(org-hugo-get-id
+                                    org-hugo-get-heading-slug
+                                    org-hugo-get-md5)))
 #+end_src
 
 *** Garden
