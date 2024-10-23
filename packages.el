@@ -51,10 +51,7 @@
 
 (package! rime)
 (package! cnfonts)
-(package! tldr)
-(package! clippy)
 (package! parrot)
-(package! restclient)
 (package! ef-themes)
 
 (unpin! org-roam)
@@ -62,7 +59,6 @@
 (package! org-fragtog)
 (package! org-roam-ui)
 (package! ox-hugo)
-(package! ob-restclient)
 
 (package! sdcv
   :recipe (:host github :repo "manateelazycat/sdcv"))

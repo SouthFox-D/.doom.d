@@ -268,14 +268,6 @@
   (org-hugo-export-wim-to-md))
 #+end_src
 
-** ob-restclient
-在代码块中发送 =HTTP= 请求，感觉十分利好一些 =api= 文档啊。
-
-#+begin_src emacs-lisp
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((restclient . t)))
-#+end_src
 * 宏
 ** cond-let
 终于知道为什么没人想写这个宏了，括号是真得多啊。
@@ -424,16 +416,6 @@
 (setq   sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic/"))
 
 (map! :leader :desc "sdvc" "z" #'sdcv-search-pointer+)
-#+end_src
-
-** Clippy
-一些远古的回忆……
-
-#+begin_src emacs-lisp
-(map! :leader
-      (:prefix ("c h" . "Help info from Clippy")
-       :desc "Clippy describes function under point" "f" #'clippy-describe-function
-       :desc "Clippy describes variable under point" "v" #'clippy-describe-variable))
 #+end_src
 
 ** Mastodon
