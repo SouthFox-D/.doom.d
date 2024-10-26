@@ -268,6 +268,11 @@
   (org-hugo-export-wim-to-md))
 #+end_src
 
+** org-clip
+#+begin_src emacs-lisp
+(setq org-cliplink-transport-implementation 'curl)
+(setq org-cliplink-curl-transport-arguments '("-L" "-x" "http://127.0.0.1:10809"))
+#+end_src
 * 宏
 ** cond-let
 终于知道为什么没人想写这个宏了，括号是真得多啊。
