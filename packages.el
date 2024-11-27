@@ -73,6 +73,3 @@
 
 ;; rust
 (unpin! rustic)
-
-;; scheme
-(package! lsp-scheme)

@@ -631,8 +631,3 @@
               (setq my/flycheck-local-cache '((lsp . ((next-checkers . (python-pylint)))))))))
 
 #+end_src
-
-* Scheme
-#+begin_src emacs-lisp
-(add-hook 'scheme-mode-hook #'lsp-scheme-guile)
-#+end_src
