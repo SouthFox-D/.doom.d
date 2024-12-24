@@ -1,4 +1,6 @@
 ;;; elisp/aaii.el -- lexical-binding: t; --
+(require 'org-id)
+
 (defvar aaii-session '())
 (defvar aaii-endpoint nil)
 
@@ -9,7 +11,7 @@
 
 (defun aaii--build-session (field)
   (unless (cdr (assoc field aaii-session))
-    (let ((session-uuid (uuidgen-4)))
+    (let ((session-uuid (org-id-uuid)))
       (message (concat "Build new session " session-uuid))
       (add-to-list 'aaii-session (cons field session-uuid))
       (request
