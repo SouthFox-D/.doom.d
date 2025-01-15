@@ -326,10 +326,150 @@
   (setq font-lock-defaults
         '(hy-font-lock-kwds)))
 
+;;; Syntax Methods
+;;;; `syntax-ppss' and `parse-partial-sexp' aliases
+;;;;; Positions
+
+(defun hy--syntax->inner-char (syntax)
+  "Get innermost char of SYNTAX."
+  (nth 1 syntax))
+
+(defun hy--syntax->last-sexp-start (state)
+  "Return start of last sexp of syntax STATE."
+  (nth 2 state))
+
+(defun hy--syntax->string-start (syntax)
+  "Return start of STATE that is in a string."
+  (nth 8 syntax))
+
+(defun hy--syntax->inner-symbol (syntax)
+  "Get innermost sexp of SYNTAX."
+  (save-excursion
+    (when (hy--goto-inner-sexp syntax)
+      (thing-at-point 'symbol))))
+
+;;;;; Predicates
+
+(defun hy--in-string? (state)
+  "Is syntax STATE in a string?"
+  (nth 3 state))
+
+(defun hy--in-string-or-comment? (state)
+  "Is syntax STATE in a string or comment?"
+  (or (nth 3 state) (nth 4 state)))
+
+(defun hy--prior-sexp? (state)
+  "Is there a prior sexp from syntax STATE?"
+  (number-or-marker-p (hy--syntax->last-sexp-start state)))
+
+;;;; Gotos
+
+(defun hy--goto-inner-char (syntax)
+  "Goto innermost char of SYNTAX."
+  (-some-> syntax hy--syntax->inner-char goto-char))
+
+(defun hy--goto-inner-sexp (syntax)
+  "Goto innermost sexp of SYNTAX."
+  (-some-> syntax hy--syntax->inner-char 1+ goto-char))
+
+(defun hy--goto-last-sexp-start (syntax)
+  "Goto start of last sexp of SYNTAX."
+  (-some-> syntax hy--syntax->last-sexp-start goto-char))
+
+(defun hy-syntax-propertize-function (start end)
+  "Implements context sensitive syntax highlighting beyond `font-lock-keywords'.
+
+In particular this implements bracket string literals.
+START and END are the limits with which to search for bracket strings passed
+and determined by `font-lock-mode' internals when making an edit to a buffer."
+  (save-excursion
+    (goto-char start)
+
+    ;; Go to the start of the #[[ block
+    (when (hy--goto-inner-char (syntax-ppss))
+      (ignore-errors (backward-char 2)))
+
+    (while (re-search-forward hy--bracket-string-rx end 'noerror)
+      (let ((a (match-beginning 1))
+            (b (match-end 1))
+            (string-fence (string-to-syntax "|")))
+        (put-text-property (1- a) a 'syntax-table string-fence)
+        (put-text-property b (1+ b) 'syntax-table string-fence)))))
+
+;;; Indentation
+;;;; Normal Indent
+
+(defun hy-indent--normal (calculated-last-sexp-indent)
+  "Get indent of the priorly let-bound value `calculate-lisp-indent-last-sexp'
+
+Example:
+ (a (b c d
+       e
+       f))
+
+1. Indent e => start at d (the last sexp) -> c -> b -> err.
+=> backwards-sexp will throw error trying to jump to a
+=> `hy-indent-function' returns nil
+=> black magic then yields the correct indent
+
+2. Indent f => start at e (the last sexp) -> loop done
+=> backward-sexp loop terminates because the indentation caught up to the sexp
+=> return indent of e
+
+Users interested in the arcane (the nil case) can step through the part of
+`calculate-lisp-indent' occurring right after `lisp-indent-function' is called.
+Stepping through the trace is particularly useful in understanding indentation
+commands."
+  (goto-char calculated-last-sexp-indent)
+
+  (let ((last-sexp-start))
+    (cond ((ignore-errors
+             (while (<= (current-indentation) (current-column))
+               (setq last-sexp-start (prog1 (point) (backward-sexp))))
+             t)
+           (current-column))
+
+          ((null last-sexp-start)
+           (progn
+             (when (-contains? '(?\' ?\` ?\~ ?\# ?\@) (char-before))
+               (backward-char))
+             (when (eq ?\~ (char-before))
+               (backward-char))
+
+             (1+ (current-column)))))))
+
+;;;; Spec Finding
+
+(defun hy-indent--syntax->indent-spec (syntax)
+  "Get int for special indentation for SYNTAX state or nil for normal indent."
+  (-when-let (sym (and (hy--prior-sexp? syntax)
+                       (thing-at-point 'symbol)))
+    (or (-contains? hy-indent--exactly sym)
+        (-some (-cut s-matches? <> sym) hy-indent--fuzzily))))
+
+;;;; Indent Function
+
+(defun hy-indent-function (_indent-point syntax)
+  "Given SYNTAX, the `parse-partial-sexp' corr. to _INDENT-POINT, get indent."
+  (hy--goto-inner-sexp syntax)
+
+  (cond ((-contains? '(?\[ ?\{) (char-before))
+         (current-column))
+
+        ((hy-indent--syntax->indent-spec syntax)
+         (1+ (current-column)))
+
+        (t (hy-indent--normal calculate-lisp-indent-last-sexp))))
+
+
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.hy\\'" . hy-mode))
 
 ;;;###autoload
-(define-derived-mode hy-mode prog-mode "Hy"
+(define-derived-mode hy-mode lisp-data-mode "Hy"
   "Major mode for editing Hy files."
-  (hy-mode--setup-font-lock))
+  (hy-mode--setup-font-lock)
+  ;; Lispy indent with hy-specialized indentation
+  (setq-local indent-tabs-mode nil)
+  (setq-local indent-line-function #'lisp-indent-line)
+  (setq-local lisp-indent-function #'hy-indent-function))
