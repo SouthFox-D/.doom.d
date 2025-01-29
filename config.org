@@ -551,6 +551,7 @@
 一些语言需要保存文件才有 =lsp= 支持……我真得需要 =lsp=
 
 #+begin_src emacs-lisp
+(setq leetcode-prefer-language "racket")
 (setq leetcode-save-solutions t)
 (setq leetcode-directory "~/Documents/leetcode")
 #+end_src
