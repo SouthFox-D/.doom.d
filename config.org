@@ -561,6 +561,8 @@
 [[https://liujiacai.net/blog/2021/03/05/emacs-love-mail-feed/][使用 Emacs 阅读邮件与 RSS - Keep Coding]]
 ** 邮件
 #+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "/home/southfox/.guix-home/profile/share/emacs/site-lisp/mu4e"))
+
 (set-email-account! "southfox.me"
   '((mu4e-sent-folder       . "/Sent")
     (mu4e-drafts-folder     . "/southfox.me/Drafts")
