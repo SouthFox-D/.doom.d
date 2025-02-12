@@ -580,15 +580,6 @@
   :after (clojure-mode))
 #+end_src
 
-** Paredit
-#+begin_src emacs-lisp
-(use-package! paredit
-  :config
-  (add-hook 'clojure-mode-hook 'enable-paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-  (add-hook 'cider-repl-mode-hook 'enable-paredit-mode))
-#+end_src
-
 * Python
 自动切换虚拟环境， poetry 包可能在处理远端机器的项目可能会有问题所以从那边抠出来放到这里。
 
