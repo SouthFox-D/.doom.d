@@ -419,7 +419,7 @@
 
 #+begin_src emacs-lisp
 (setq sdcv-say-word-p t)
-(setq   sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic/"))
+(setq sdcv-dictionary-data-dir (expand-file-name "~/.stardict/dic/"))
 
 (map! :leader :desc "sdvc" "z" #'sdcv-search-pointer+)
 #+end_src
