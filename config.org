@@ -278,13 +278,13 @@
 终于知道为什么没人想写这个宏了，括号是真得多啊。
 
 #+begin_src emacs-lisp
-(defmacro cond-let (forms)
+(defmacro cond-let (&rest forms)
   (declare (debug t))
-  (if forms
+  (if (not (equal forms 'nil))
       `(let* ,(setq varlist (internal--build-bindings (caar forms)))
          (if-let ,(car (last varlist))
              ,(cadar forms)
-           (cond-let ,(cdr ,@forms))))))
+           (cond-let ,@(cdr forms))))))
 #+end_src
 
 * 杂项
