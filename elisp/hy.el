@@ -326,6 +326,78 @@
   (setq font-lock-defaults
         '(hy-font-lock-kwds)))
 
+(defvar hy-indent--exactly
+  '("when" "unless"
+    "for" "for*" "for/a" "for/a*"
+    "while"
+    "except" "catch")
+  "Symbols that will have following lines indented +1 when matched.
+
+Examples:
+
+(when foo
+  body)
+(when-xx foo
+         body)
+")
+
+
+(defvar hy-indent--fuzzily
+  '("def"
+    "let"
+    "with" "with/a"
+    "fn" "fn/a")
+  "Symbols that will have following lines indented +1 when matched at start.
+
+Examples:
+
+(with foo
+  body)
+(with-xx foo
+  body)
+")
+
+;;; Syntax
+;;;; Syntax Table
+
+(defconst hy-mode-syntax-table
+  (let ((table (copy-syntax-table lisp-mode-syntax-table)))
+    ;; List-likes
+    (modify-syntax-entry ?\{ "(}" table)
+    (modify-syntax-entry ?\} "){" table)
+    (modify-syntax-entry ?\[ "(]" table)
+    (modify-syntax-entry ?\] ")[" table)
+
+    ;; Quote Characters
+    (modify-syntax-entry ?\~ "'" table)
+
+    ;; Symbol Constituents
+    (modify-syntax-entry ?\, "_" table)
+    (modify-syntax-entry ?\| "_" table)
+    (modify-syntax-entry ?\# "_" table)
+
+    ;; Note that @ is a valid symbol token but in almost all usages we would
+    ;; rather the symbol for ~@foo to be recognized as foo and not @foo.
+    (modify-syntax-entry ?\@ "'" table)
+
+    table)
+  "The `hy-mode' syntax table.")
+
+(defconst inferior-hy-mode-syntax-table (copy-syntax-table hy-mode-syntax-table)
+  "`inferior-hy-mode' inherits `hy-mode-syntax-table'.")
+
+;;;; Context Sensitive
+
+(defconst hy--bracket-string-rx
+  (rx "#["
+      (0+ not-newline)
+      "["
+      (group (1+ (not (any "]"))))
+      "]"
+      (0+ not-newline)
+      "]")
+  "Regex identifying Hy's bracket string literals.")
+
 ;;; Syntax Methods
 ;;;; `syntax-ppss' and `parse-partial-sexp' aliases
 ;;;;; Positions
