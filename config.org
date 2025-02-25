@@ -260,12 +260,11 @@
   (message "publish nwe post!"))
 
 (defun my/org-roam-creat-node ()
-  "creat node and add IS_NODE property"
+  "creat node and add publish."
   (interactive)
   (org-id-get-create)
-  (org-set-tags ":NODE:")
   (save-buffer)
-  (org-hugo-export-wim-to-md))
+  (my/org-roam-publish))
 #+end_src
 
 ** org-clip
