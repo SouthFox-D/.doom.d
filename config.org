@@ -413,6 +413,160 @@
 #+end_src
 
 * 工具
+** Consult
+#+begin_src elisp
+;; Adopted from counsel-omni:
+;; URL https://github.com/armindarvish/consult-omni
+(require 'consult)
+
+(cl-defun my/consult-fox--apps-format-candidates (&rest args &key title path snippet visible &allow-other-keys)
+  "Formats the candidates of `consult-fox-apps' withn ARGS
+
+Description of Arguments:
+
+  SOURCE  a string; the name to use (e.g. “Apps”)
+  QUERY   a string; the query input from the user
+  TITLE   a string; the title of the App (name of an application)
+  PATH    a string; the filepath to the application
+  SNIPPET a string; the description of the app (from Desktop Entry)
+  VISIBLE a boolean; whether the applicaiton is visible
+          (this can be derived from DesktopEntry)
+  FACE    a symbol; the face to use for TITLE"
+  (let* (
+         (directory (and path (file-name-directory path)))
+         (title-str (propertize title))
+         (str (concat title-str
+                      (unless visible "\s[Hidden App]")
+                      (when snippet (concat "\t" snippet))
+                      (when directory (concat "\t" directory))
+                      )))
+    str))
+
+(defun my/consult-fox--apps-get-desktop-apps ()
+  "Return a list of system applications. "
+  (save-match-data
+    (let ((paths (remove nil (mapcar (lambda (dir)
+                                       (let ((path (and (stringp dir) (file-exists-p dir) (file-truename (expand-file-name "applications" dir)))))
+                                         (and (stringp path) path)))
+                                     (append (if (fboundp 'xdg-data-dirs) (xdg-data-dirs)
+                                               (let ((path (getenv "XDG_DATA_DIRS")))
+                                                 (if (or (null path) (string= path ""))
+                                                     nil
+                                                   (parse-colon-path path))))
+                                             (list
+                                              "/usr/share"
+                                              "/usr/local/share"))))))
+      (when (listp paths)
+        (setq consult-fox-apps-cached-apps
+              (cl-remove-duplicates
+               (apply #'append (mapcar
+                                (lambda (path)
+                                  (when (file-exists-p path)
+                                    (directory-files path t ".*\\.desktop$" t)))
+                                paths))))))))
+
+(defun my/consult-fox--apps-parse-app-file (file)
+  "Parse a desktop entry FILE.
+
+Returns
+ - name: the name of the application
+ - comment: description of the application
+ - exec: the executable for application
+
+Adopted from `counsel-linux-app--parse-file' in counsel:
+URL https://github.com/abo-abo/swiper/blob/master/counsel.el"
+  (save-match-data
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (let ((start (re-search-forward "^\\[Desktop Entry\\] *$" nil t))
+            (end (re-search-forward "^\\[" nil t))
+            (visible t)
+            name comment exec)
+        (catch 'break
+          (unless start
+            (throw 'break nil))
+          (goto-char start)
+          (when (re-search-forward "^\\(Hidden\\|NoDisplay\\) *= *\\(1\\|true\\) *$" end t)
+            (setq visible nil))
+          (setq name (match-string 1))
+          (goto-char start)
+          (unless (re-search-forward "^Type *= *Application *$" end t)
+            (throw 'break nil))
+          (setq name (match-string 1))
+          (goto-char start)
+          (unless (re-search-forward "^Name *= *\\(.+\\)$" end t)
+            (throw 'break nil))
+          (setq name (match-string 1))
+          (goto-char start)
+          (when (re-search-forward "^Comment *= *\\(.+\\)$" end t)
+            (setq comment (match-string 1)))
+          (goto-char start)
+          (unless (re-search-forward "^Exec *= *\\(.+\\)$" end t)
+            ;; Don't warn because this can technically be a valid desktop file.
+            (throw 'break nil))
+          (setq exec (match-string 1))
+          (goto-char start)
+          (when (re-search-forward "^TryExec *= *\\(.+\\)$" end t)
+            (let ((try-exec (match-string 1)))
+              (unless (locate-file try-exec exec-path nil #'file-executable-p)
+                (throw 'break nil))))
+          (list name comment exec visible))))))
+
+(defun my/consult-fox-apps--get-items (files)
+  (save-match-data
+    (mapcar (lambda (file)
+              (pcase-let* (
+                           (`(,name ,comment ,exec ,visible) (my/consult-fox--apps-parse-app-file file))
+                           (title (or name (file-name-base file) ""))
+                           (app (and (stringp file) (file-exists-p file) (file-name-nondirectory file)))
+                           (decorated (funcall #'my/consult-fox--apps-format-candidates :title title :path file :snippet comment :visible visible)))
+                (propertize decorated
+                            :title title
+                            :snippet comment
+                            :path file
+                            :exec exec
+                            :app app)))
+            files)))
+
+(defun app-launcher ()
+  (let ((app (consult--read (my/consult-fox-apps--get-items (my/consult-fox--apps-get-desktop-apps))
+                            :lookup (apply-partially #'consult--lookup-prop :app))))
+    (call-process-shell-command (string-join `("gtk-launch"
+                                               ,(shell-quote-argument (format "%s" app))
+                                               "&")
+                                             " "))
+    nil))
+
+(defun clipboard-picker ()
+  (let* ((clipboard (cl-remove-if #'string-empty-p (split-string (shell-command-to-string "cliphist list") "\n")))
+         (selected (consult--read clipboard :sort nil))
+         (match (string-match "^[0-9]+" selected)))
+    (if match
+        (call-process-shell-command (format "cliphist decode %s | wl-copy" (substring selected match (match-end 0))))
+      (error "Invalid match"))
+    nil))
+
+(defun my/fox-run-launcher (func)
+  (interactive
+   (list (completing-read "select:" '(clipboard-picker app-launcher))))
+
+  (with-selected-frame
+      (make-frame '((name . "fox-consult")
+                    (minibuffer . only)
+                    (fullscreen . 0)    ; no fullscreen
+                    (undecorated . t)   ; remove title bar
+                    (internal-border-width . 10)
+                    (width . 80)
+                    (height . 18)))
+
+    (unwind-protect
+        (funcall (symbol-function (intern func)))
+      (delete-frame)
+      (when (> (length (window-list)) 1)
+          (evil-quit)))))
+#+end_src
+
 ** SDCV
 翻译包，词典要自己下，同时不要忘了安装 =stardict= 和 =sdcv= 这两个软件。
 
