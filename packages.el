@@ -64,6 +64,8 @@
   :recipe (:host github :repo "manateelazycat/sdcv"))
 (package! mastodon)
 (package! leetcode)
+(package! enep
+  :recipe (:type git :repo "https://git.southfox.me/elisp/enep.el"))
 
 ;; clojure
 (unpin! (:lang clojure))
