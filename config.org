@@ -548,7 +548,8 @@ URL https://github.com/abo-abo/swiper/blob/master/counsel.el"
     nil))
 
 (defun my/delete-frame-if-neccessary (&rest r)
-  (when (equal "fox-consult" (frame-parameter nil 'name))
+  (when (and (equal "fox-consult" (frame-parameter nil 'name))
+             (not org-roam-capture--node))
       (delete-frame)))
 
 (add-hook 'org-capture-after-finalize-hook #'my/delete-frame-if-neccessary)
