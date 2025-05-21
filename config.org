@@ -569,20 +569,22 @@ URL https://github.com/abo-abo/swiper/blob/master/counsel.el"
   (interactive
    (list (completing-read "select:" my/fox--popup-pick)))
 
-  (with-selected-frame
-      (make-frame '((name . "fox-consult")
-                    (minibuffer . only)
-                    (fullscreen . 0)    ; no fullscreen
-                    (undecorated . t)   ; remove title bar
-                    (internal-border-width . 10)
-                    (width . 80)
-                    (height . 18)))
+  (let ((picker-p (cl-search "picker" func)))
+    (with-selected-frame
+        (make-frame `((name . "fox-consult")
+                      (minibuffer . ,(if picker-p 'only t))
+                      (fullscreen . 0)   ; no fullscreen
+                      (undecorated . t)  ; remove title bar
+                      (internal-border-width . 10)
+                      (width . 80)
+                      (height . 18)))
 
-    (unwind-protect
-        (funcall (symbol-function (intern func)))
-      (delete-frame)
-      (when (> (length (window-list)) 1)
-          (evil-quit)))))
+      (unwind-protect
+          (funcall (symbol-function (intern func)))
+        (when picker-p
+          (delete-frame)
+          (when (> (length (window-list)) 1)
+            (evil-quit)))))))
 
 (defun my/fox-pick-picker ()
   (interactive)
