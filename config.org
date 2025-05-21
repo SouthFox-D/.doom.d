@@ -249,6 +249,10 @@
           (progn
             (goto-char headline)
             (org-cut-subtree)))
+      (if-let ((headline (org-find-exact-headline-in-buffer "梦记")))
+          (progn
+            (goto-char headline)
+            (org-cut-subtree)))
       (org-hugo-export-wim-to-md)))
 
   (async-shell-command (concat
