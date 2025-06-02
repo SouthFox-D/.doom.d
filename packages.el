@@ -57,7 +57,6 @@
 (unpin! org-roam)
 (package! org-download)
 (package! org-fragtog)
-(package! org-roam-ui)
 (package! ox-hugo)
 
 (package! sdcv
