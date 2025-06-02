@@ -95,17 +95,17 @@
       '(("m" "main" plain
 	 "%?"
 	 :if-new (file+head "main/%<%Y%m%d%H%M%S>-${slug}.org"
-			    "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: main\n")
+                            "#+title: ${title}\n#+date: %T\n#+hugo_section: main\n")
 	 :immediate-finish t
 	 :unnarrowed t)
 	("r" "references" plain "%?"
 	 :if-new
-	 (file+head "references/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: references\n")
+	 (file+head "references/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+hugo_section: references\n")
 	 :immediate-finish t
 	 :unnarrowed t)
 	("a" "article" plain "%?"
 	 :if-new
-	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article:\n#+hugo_auto_set_lastmod: t\n#+hugo_section: articles\n")
+	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article:\n#+hugo_section: articles\n")
 	 :immediate-finish t
 	 :unnarrowed t)))
 
@@ -113,7 +113,7 @@
       '(("d" "default" entry
          "* %?"
          :target (file+head "%<%Y-%m-%d>.org"
-                            "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_auto_set_lastmod: t\n#+hugo_section: daily\n"))))
+                            "#+title: %<%Y-%m-%d>\n#+date: %T\n#+hugo_section: daily\n"))))
 
 (with-eval-after-load 'ox-hugo
   (setq org-hugo-anchor-functions '(org-hugo-get-id
@@ -231,20 +231,65 @@
   (dolist (org-file (my/org-roam-list-notes-by-tag "publish"))
   ;(dolist (org-file (directory-files-recursively org-roam-directory "\.org$"))
     (with-current-buffer (find-file org-file)
-        (org-hugo-export-wim-to-md))))
+        (my/org-roam-publish t))))
 
-(defun my/org-roam-publish ()
+(defun my/insert--backlinks (&optional heading-func)
+  (if-let ((backlinks (org-roam-backlinks-get (org-roam-node-at-point) :unique t)))
+      (save-excursion
+        (when heading-func
+          (funcall heading-func))
+        (insert " 反向链接\n")
+        (dolist (backlink backlinks)
+          (let* ((source-node (org-roam-backlink-source-node backlink))
+                 (point (org-roam-backlink-point backlink)))
+            (insert
+             (format "- [[id:%s][%s]]\n"
+                     (org-roam-node-id source-node)
+                     (org-roam-node-title source-node))))))))
+
+(defun my/insert-backlinks ()
+  (goto-char (point-min))
+  (org-shifttab 0)
+  (while (= 0 (org-next-visible-heading 1))
+    (when (assoc "ID" (org-entry-properties))
+      (my/insert--backlinks
+       (lambda ()
+         (org-insert-subheading t)))))
+  (goto-char (point-min))
+  (my/insert--backlinks
+   (lambda ()
+     (goto-char (point-max))
+     (insert "* "))))
+
+(defun my/extract-org-roam-id (origin-filename)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((matche '()))
+      (while (re-search-forward "\\[\\[id:\\(.*?\\)]\\[.*?\\]\\]" nil t)
+        (when-let* ((uuid (match-string-no-properties 1))
+                    (roam-node (org-roam-node-from-id uuid))
+                    (file-name (car (org-roam-id-find uuid))))
+          (when (member "publish" (org-roam-node-tags roam-node))
+            (push file-name matche))))
+      (delete origin-filename (seq-uniq matche)))))
+
+(defun my/org-roam-publish (&optional skip-publish skip-update-backlinks)
   "Publish current file"
   (interactive)
+  (goto-char (point-min))
   (org-roam-update-org-id-locations)
-  (org-roam-set-keyword "filetags" ":publish:")
+  (org-roam-tag-add (list "publish"))
+  (unless skip-update-backlinks
+    (org-roam-set-keyword "hugo_lastmod" (format-time-string "%Y-%m-%d %H:%M:%S")))
   (save-buffer)
-  (let ((publish-content (buffer-string)))
-    (with-current-buffer (get-buffer-create "*Garden*")
+  (let ((publish-content (buffer-string))
+        (origin-filename (buffer-file-name))
+        (filename (concat (file-name-base (buffer-file-name)) ".org")))
+    (with-temp-buffer
       (erase-buffer)
       (insert publish-content)
       (org-mode)
-      (org-roam-set-keyword "EXPORT_FILE_NAME" (cadar (org-collect-keywords '("title"))))
+      (org-roam-set-keyword "EXPORT_FILE_NAME" filename)
       (if-let ((headline (org-find-exact-headline-in-buffer "总结")))
           (progn
             (goto-char headline)
@@ -253,15 +298,23 @@
           (progn
             (goto-char headline)
             (org-cut-subtree)))
-      (org-hugo-export-wim-to-md)))
+      (my/insert-backlinks)
+      (unless skip-update-backlinks
+        (let ((back-files (my/extract-org-roam-id origin-filename)))
+          (dolist (back-file back-files)
+            (message back-file)
+            (with-current-buffer (get-file-buffer back-file)
+              (my/org-roam-publish t t)))))
 
-  (async-shell-command (concat
-                        "cd " org-hugo-base-dir
-                        " && " "git add ."
-                        (if (yes-or-no-p "Push now?")
-                            (concat " && " "git commit -m '[post] new post'"
-                                    " && " "git push"))) "*Messages*")
-  (message "publish nwe post!"))
+      (org-hugo-export-wim-to-md)))
+  (unless skip-publish
+    (async-shell-command (concat
+                          "cd " org-hugo-base-dir
+                          " && " "git add ."
+                          (if (yes-or-no-p "Push now?")
+                              (concat " && " "git commit -m '[post] new post'"
+                                      " && " "git push"))) "*Messages*"))
+  (message "publish new post!"))
 
 (defun my/org-roam-creat-node ()
   "creat node and add publish."
