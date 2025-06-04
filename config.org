@@ -269,6 +269,7 @@
       (insert publish-content)
       (org-mode)
       (org-roam-set-keyword "EXPORT_FILE_NAME" filename)
+      (org-roam-tag-remove (list "publish"))
       (if-let ((headline (org-find-exact-headline-in-buffer "总结")))
           (progn
             (goto-char headline)
