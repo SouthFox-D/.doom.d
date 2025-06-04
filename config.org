@@ -429,6 +429,24 @@
    find-file-hook))
 #+end_src
 
+** EVIL
+耶，堕入黑暗！
+
+设置 =orderless= 使用使用拼音首字母搜索，pyszm 最有用的一集。
+
+#+begin_src elisp
+(use-package evil-pinyin
+  :after (evil orderless)
+  :autoload evil-pinyin--build-regexp-string
+  :init
+  (setq-default evil-pinyin-scheme 'simplified-ziranma-all)
+  (defun completion--regex-pinyin (str)
+    (orderless-regexp (evil-pinyin--build-regexp-string str)))
+  (add-to-list 'orderless-matching-styles 'completion--regex-pinyin)
+  :config
+  (global-evil-pinyin-mode))
+#+end_src
+
 ** 其它文件
 存放一些 =token= 的秘密文件，应该注意不能随 =git= 上传或者同步。
 

@@ -50,6 +50,7 @@
 ;(unpin! t)
 
 (package! rime)
+(package! evil-pinyin)
 (package! cnfonts)
 (package! parrot)
 (package! ef-themes)
