@@ -213,7 +213,12 @@
         (my/org-roam-publish t))))
 
 (defun my/insert--backlinks (&optional heading-func)
-  (if-let ((backlinks (org-roam-backlinks-get (org-roam-node-at-point) :unique t)))
+  (if-let* ((file-name (buffer-file-name))
+            (raw-backlinks (org-roam-backlinks-get (org-roam-node-at-point) :unique t))
+            (backlinks (seq-filter (lambda (elt) (not (eq
+                                                       (org-roam-node-file elt)
+                                                       file-name)))
+                                   raw-backlinks)))
       (save-excursion
         (when heading-func
           (funcall heading-func))
