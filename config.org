@@ -274,6 +274,7 @@
     (with-temp-buffer
       (erase-buffer)
       (insert publish-content)
+      (goto-char (point-min))
       (org-mode)
       (org-roam-set-keyword "EXPORT_FILE_NAME" filename)
       (org-roam-tag-remove (list "publish"))
