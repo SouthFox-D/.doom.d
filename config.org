@@ -362,7 +362,7 @@
 将使用的终端切换到 =zsh= 。
 
 #+begin_src emacs-lisp
-(setq shell-file-name "/bin/zsh"
+(setq shell-file-name (expand-file-name "~/.guix-home/profile/bin/zsh")
       vterm-max-scrollback 5000)
 #+end_src
 
