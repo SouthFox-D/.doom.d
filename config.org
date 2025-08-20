@@ -4,7 +4,7 @@
 现在我用的主题是……
 
 #+begin_src emacs-lisp
-(setq doom-theme 'ef-spring)
+(setq doom-theme 'ef-arbutus)
 #+end_src
 
 * 启动
