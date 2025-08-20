@@ -199,7 +199,6 @@
 
        :email
        (mu4e
-        +org
         +offlineimap)
        ;;notmuch
        ;;(wanderlust +gmail)
