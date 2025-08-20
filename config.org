@@ -669,67 +669,6 @@ URL https://github.com/abo-abo/swiper/blob/master/counsel.el"
 (map! :leader :desc "sdvc" "z" #'sdcv-search-pointer+)
 #+end_src
 
-** Mastodon
-使用 [[https://codeberg.org/martianh/mastodon.el][mastodon.el]] 在无所事事时快速打开 =Mastodon= 进行一个鱼的摸！
-
-#+begin_src emacs-lisp :tangle no
-(setq mastodon-instance-url "https://social.instance.org"
-      mastodon-active-user "example_user")
-#+end_src
-
-然后设置按键绑定，现在的设置还有一些问题，主要是要在不干扰 =evil= 快捷键的
-情况下塞入新的按键还是挺难的。
-
-#+begin_src emacs-lisp
-(map! :leader
-      :prefix ("o")
-      :desc "Mastodon"          "M" #'mastodon)
-
-(map! :after mastodon
-      :map mastodon-mode-map
-      :n "[ [" #'mastodon-tl--goto-prev-toot
-      :n "] ]" #'mastodon-tl--goto-next-toot
-      :n "g k" #'mastodon-tl--previous-tab-item
-      :n "g j" #'mastodon-tl--next-tab-item
-
-      :n "q" #'kill-current-buffer
-      :n "Q" #'kill-buffer-and-window
-
-      ;;; timelines
-      :n "#" #'mastodon-tl--get-tag-timeline
-      :n "A" #'mastodon-profile--get-toot-author
-      :n "F" #'mastodon-tl--get-federated-timeline
-      :n "H" #'mastodon-tl--get-home-timeline
-      :n "L" #'mastodon-tl--get-local-timeline
-      :n "N" #'mastodon-notifications-get
-      :n "O" #'mastodon-profile--my-profile
-      :n "P" #'mastodon-profile--show-user
-      :n "T" #'mastodon-tl--thread
-
-      ;;; toot actions
-      :n "K" #'mastodon-toot--bookmark-toot-toggle
-      :n "R" #'mastodon-toot--toggle-boost
-      :n "c" #'mastodon-tl--toggle-spoiler-text-in-toot
-      :n "C" #'mastodon-toot--copy-toot-url
-      :n "o" #'mastodon-url-lookup
-      :n "d" #'mastodon-toot--delete-toot
-      :n "D" #'mastodon-toot--delete-draft-toot
-      :n "f" #'mastodon-toot--toggle-favourite
-      :n "r" #'mastodon-toot--reply
-      :n "u" #'mastodon-tl--update
-      :n "v" #'mastodon-tl--poll-vote
-
-      ;;; toot!
-      :n "t" #'mastodon-toot
-
-      ;;; mastodon additions
-      :n "S"    #'mastodon-search--search-query
-      :n "V F"  #'mastodon-profile--view-favourites
-      :n "V B"  #'mastodon-profile--view-bookmarks
-      :n "V L" #'mastodon-tl--view-list-timeline
-      )
-#+end_src
-
 ** TODO Rime
 一个文本编辑器也可以内置输入法呢……
 
