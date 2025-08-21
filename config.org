@@ -448,6 +448,23 @@
   :config
   (global-evil-pinyin-mode))
 #+end_src
+** Radio Garden
+
+#+begin_src emacs-lisp
+(use-package! radio-garden
+  :after
+  emms-player-mpv
+  :config
+  (setq! emms-player-mpv-update-metadata t
+         radio-garden-proxy-option "http://127.0.0.1:10809")
+  (defun my/insert-radio-current-play ()
+    (interactive)
+    (with-current-buffer (find-file-noselect (org-roam-node-file (org-roam-node-from-title-or-alias "Music")))
+      (goto-char (point-max))
+      (insert (concat "- [ ] ")
+              (cdr (assoc 'info-title (emms-playlist-current-selected-track))))
+      (save-buffer))))
+#+end_src
 
 ** 其它文件
 存放一些 =token= 的秘密文件，应该注意不能随 =git= 上传或者同步。
