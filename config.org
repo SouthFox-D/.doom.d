@@ -352,6 +352,24 @@
 (add-to-list 'default-frame-alist '(width . 102))
 #+end_src
 
+两个快乐的事情重合到一起……
+
+#+begin_src emacs-lisp
+(defun fox/switch-project-magit-status (&optional arg)
+  (interactive "P")
+  (let ((projects (projectile-relevant-known-projects)))
+    (if projects
+        (projectile-completing-read
+         "Switch to project: " projects
+         :action (lambda (project)
+                   (magit-status-setup-buffer project)))
+      (user-error "There are no known projects"))))
+
+(map! :leader
+      :prefix ("g" . "git")
+      :desc "Switch magit status"          "p" #'fox/switch-project-magit-status)
+#+end_src
+
 ** Shell
 将使用的终端切换到 =zsh= 。
 
