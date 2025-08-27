@@ -332,19 +332,9 @@
 #+end_src
 
 * 杂项
-=cnfonts= 是一个可以分别设置中英文字体的 bk ，方便对其表格。
-
 =word-wrap-by-category= 是中文优化，当一行有英文和中文时不折行。
 
 #+begin_src emacs-lisp
-(setq cnfonts-personal-fontnames
-      '(()
-        ()
-        ("Noto Color Emoji")
-        ()
-        ()))
-(cnfonts-mode 1)
-
 (setq word-wrap-by-category t)
 
 (setq doom-unicode-font (font-spec :family "Noto Color Emoji"))
