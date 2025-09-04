@@ -291,7 +291,7 @@
         (let ((back-files (my/extract-org-roam-id origin-filename)))
           (dolist (back-file back-files)
             (message back-file)
-            (with-current-buffer (dired-noselect back-file)
+            (with-current-buffer (find-file-noselect back-file)
               (my/org-roam-publish t t)))))
 
       (org-hugo-export-wim-to-md)))
