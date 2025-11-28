@@ -446,7 +446,9 @@ are recognized."
 ** org-clip
 #+begin_src emacs-lisp
 (setq org-cliplink-transport-implementation 'curl)
-(setq org-cliplink-curl-transport-arguments '("-L" "-x" "http://127.0.0.1:10809"))
+(setq org-cliplink-curl-transport-arguments
+      '("-L" "-x" "http://127.0.0.1:10809"
+        "-H" "User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:137.0) Gecko/20100101 Firefox/140.0"))
 #+end_src
 * 宏
 ** cond-let
