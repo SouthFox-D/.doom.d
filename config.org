@@ -351,13 +351,7 @@ are recognized."
 
 (defun my/insert--backlinks (&optional heading-func)
   (if-let* ((file-title (org-get-title))
-            (raw-backlinks (org-roam-backlinks-get (org-roam-node-at-point) :unique t))
-            (backlinks (seq-filter (lambda (elt)
-                                     (not (equal
-                                           (org-roam-node-title
-                                            (org-roam-backlink-source-node elt))
-                                           file-title)))
-                                   raw-backlinks)))
+            (backlinks (org-roam-backlinks-get (org-roam-node-at-point) :unique t)))
       (save-excursion
         (when heading-func
           (funcall heading-func))
