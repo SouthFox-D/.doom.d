@@ -857,6 +857,11 @@ URL https://github.com/abo-abo/swiper/blob/master/counsel.el"
   (setq emms-player-next-function #'enep-play-next-like-song))
 #+end_src
 
+** Miniflux
+#+begin_src emacs-lisp
+(use-package! miniflux)
+#+end_src
+
 * 信息
 更多信息请参考下面这篇文章：
 [[https://liujiacai.net/blog/2021/03/05/emacs-love-mail-feed/][使用 Emacs 阅读邮件与 RSS - Keep Coding]]

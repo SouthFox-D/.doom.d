@@ -66,6 +66,8 @@
   :recipe (:type git :repo "https://git.southfox.me/elisp/enep.el"))
 (package! radio-garden
   :recipe (:type git :repo "https://git.southfox.me/elisp/radio-garden.el"))
+(package! miniflux
+  :recipe (:type git :repo "https://git.southfox.me/elisp/miniflux.el"))
 
 ;; clojure
 (unpin! (:lang clojure))
