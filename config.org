@@ -242,7 +242,7 @@ are recognized."
 	 :unnarrowed t)
 	("a" "article" plain "%?"
 	 :if-new
-	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n#+filetags: :article:\n")
+	 (file+head "articles/%<%Y%m%d%H%M%S>-${title}.org" "#+title: ${title}\n#+date: %T\n")
 	 :immediate-finish t
 	 :unnarrowed t)))
 
